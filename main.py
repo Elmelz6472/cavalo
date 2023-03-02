@@ -1,186 +1,105 @@
-import sys
-import time
-from parsel import Selector
-from playwright.sync_api import sync_playwright
-from abc import ABC, abstractmethod
+import os
+import subprocess
+import tkinter as tk
+from tkinter import filedialog
+
+
+class Application(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
+        self.master = master
+        self.master.title("Execute Python Script")
+        self.master.geometry("400x350")
+        self.master.resizable(True, True)
+        self.pack()
+        self.create_widgets()
+        self.process = None
+
+    def create_widgets(self):
+        self.keyword_label = tk.Label(
+            self, text="Keyword argument:", font=("Helvetica", 12)
+        )
+        self.keyword_label.pack(side="top", pady=10)
+        self.keyword_entry = tk.Entry(self, font=("Helvetica", 12), width=30)
+        self.keyword_entry.pack(side="top", padx=10, pady=5)
+
+        self.location_label = tk.Label(
+            self, text="Location argument:", font=("Helvetica", 12)
+        )
+        self.location_label.pack(side="top", pady=10)
+        self.location_entry = tk.Entry(self, font=("Helvetica", 12), width=30)
+        self.location_entry.pack(side="top", padx=10, pady=5)
+
+        self.depth_label = tk.Label(
+            self, text="Depth argument:", font=("Helvetica", 12)
+        )
+        self.depth_label.pack(side="top", pady=10)
+        self.depth_entry = tk.Entry(self, font=("Helvetica", 12), width=30)
+        self.depth_entry.pack(side="top", padx=10, pady=5)
+
+        self.select_button = tk.Button(
+            self,
+            text="Select Script File",
+            width=20,
+            height=2,
+            font=("Helvetica", 12, "bold"),
+            command=self.select_script_file,
+        )
+        self.select_button.pack(side="top", padx=10, pady=10)
+
+        self.run_button = tk.Button(
+            self,
+            text="Run Python Script",
+            width=20,
+            height=2,
+            font=("Helvetica", 12, "bold"),
+            state="disabled",
+            command=self.run_script,
+        )
+        self.run_button.pack(side="left", padx=10, pady=10)
+
+        self.cancel_button = tk.Button(
+            self,
+            text="Cancel Script",
+            width=20,
+            height=2,
+            font=("Helvetica", 12, "bold"),
+            state="disabled",
+            command=self.cancel_script,
+        )
+        self.cancel_button.pack(side="right", padx=10, pady=10)
+
+    def select_script_file(self):
+        self.script_file = filedialog.askopenfilename(
+            title="Select Script File",
+            filetypes=[("Python Files", "*.py"), ("All Files", "*.*")],
+        )
+        if self.script_file:
+            self.run_button.config(state="normal")
+
+            # Set the script filename as the text of the "Select Script File" button
+            self.select_button.configure(text=os.path.basename(self.script_file))
+
+    def run_script(self):
+        command = [
+            "python",
+            self.script_file,
+            self.keyword_entry.get(),
+            self.location_entry.get(),
+            self.depth_entry.get(),
+        ]
+        self.process = subprocess.Popen(command)
+        self.run_button.config(state="disabled")
+        self.cancel_button.config(state="normal")
+
+    def cancel_script(self):
+        if self.process:
+            self.process.kill()
+            self.process = None
+            self.run_button.config(state="normal")
+            self.cancel_button.config(state="disabled")
+
 
-
-URL = "https://ca.indeed.com/"
-
-
-class Navigation(ABC):
-    def __init__(self, name, url, keywords, location):
-        self.name = name.lower()
-        self.url = url
-        self.keywords = keywords
-        self.location = location
-
-    def path(self, name):
-        if (self.name)== "indeed":
-            dict_path = {
-                "keywords": "#text-input-what",
-                "location": "#text-input-where",
-                "submit": "#jobsearch > button",
-                "change": "data-testid=pagination-page-next",
-            }
-            return dict_path
-
-    def inputs(self, name):
-        if self.name == "indeed":
-            dict_inputs = {
-                "keywords": self.keywords,
-                "location": self.location
-            }
-            return dict_inputs
-
-    def waiting(self, selector=False, delay=0):
-        if delay > 0 and selector==False:
-            self.page.wait_for_timeout(delay)
-
-        elif delay == 0 and selector != False:
-            self.page.wait_for_selector(selector)
-
-        else:
-            self.page.wait_for_load_state('domcontentloaded')
-
-    def go_to(self, URL):
-        self.page.goto(URL, wait_until='networkidle')
-
-    def scroll_to_end_page(self, element_to_see):
-        while True:
-            self.page.mouse.wheel(0, 250)
-            self.waiting(delay=350)
-            if self.page.locator(element_to_see).is_visible():
-                break
-
-
-
-class Client(Navigation):
-    def __init__(self, name, url, keywords, location, depth=0):
-        self.name = name
-        self.url = url
-        self.keywords = keywords
-        self.location = location
-        self.depth = depth
-
-        super(Client, self).__init__(self.name, self.url, self.keywords, self.location)
-
-
-        self.browser = None
-        self.context = None
-        self.page = None
-        with sync_playwright() as playwright:
-            self.run(playwright)
-
-    def sendKeys(self, locator, input_words, delay=0):
-        self.page.locator(locator).fill('')
-        self.waiting(delay=100)
-        self.page.locator(locator).type(input_words, delay=delay)
-
-
-
-    def clicking(self, locator):
-            self.page.locator(locator).click(force=True)
-            self.waiting(delay=100)
-
-
-
-    def scan_page(self, next_selector):
-        self.waiting()
-        self.waiting(delay=100)
-        print("scanning page")
-        self.scroll_to_end_page(element_to_see=next_selector)
-
-        self.waiting(delay=1200)
-
-        f = open("info.txt", "w")
-        f.write(self.page.content())
-        f.close()
-
-        self.clicking(next_selector)
-
-
-    def run(self, playwright: "Playwright") -> None:
-
-        self.browser = playwright.chromium.launch(timeout=150000, headless=False)
-        self.context = self.browser.new_context()
-        self.context.tracing.start(screenshots=True, snapshots=True)
-
-        self.page = self.context.new_page()
-
-        selector_inputs = self.path(self.name)
-        selector_write = self.inputs(self.name)
-
-        self.page.set_default_navigation_timeout(10000)
-
-        self.go_to(URL)
-
-        self.waiting(selector_inputs["keywords"])
-        self.waiting(selector_inputs["location"])
-
-
-
-        # Add keywords (search bar)
-        self.sendKeys(selector_inputs["keywords"], selector_write["keywords"], delay=100)
-        self.waiting(delay=250)
-
-        # Write where you want to search
-        self.sendKeys(selector_inputs["location"], selector_write["location"], delay=100)
-        self.waiting(delay=250)
-
-        # Click submit
-        self.clicking(selector_inputs["submit"])
-
-        # FIRST INITIAL SCAN OF PAGE
-        self.scan_page(selector_inputs["change"])
-
-
-        # LOOP THROUGH X times
-        # for _ in range(self.depth):
-        #     self.scan_page(selector_inputs["change"])
-
-    # def export_content(self):
-
-
-
-
-
-
-
-
-class Collector(Client):
-    def __init__(self, name, url, keywords, location):
-        self.name = name
-        self.url = url
-        self.keywords = keywords
-        self.location = location
-        # super(Collector, self).__init__(self.name, self.url, self.keywords, self.location)
-
-    def parse(self):
-        self.parsed_data = []
-
-        with open("info.txt") as f:
-            selector = Selector(text=f.read())
-            x = selector.css('div::attr(class)')
-            # print(x.getall())
-            for i in x.getall():
-                print(i)
-                print("\n\n\n")
-
-        # return self.parsed_data
-
-
-
-
-
-
-
-
-
-
-# client = Client("indeed", URL, "journalier de production", "laval", depth=3)
-# Collector(client)
-lol = Collector("indeed", URL, "journalier de production", "laval")
-lol.parse()
-
-# Client("indeed", URL, sys.argv[1], sys.argv[2])
+root = tk.Tk()
+app = Application(master=root)
+app.mainloop()
