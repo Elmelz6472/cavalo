@@ -1,6 +1,5 @@
 import sys
 import os
-import shutil
 import time
 import pandas as pd
 from datetime import datetime
@@ -14,11 +13,13 @@ URL = "https://ca.indeed.com/"
 
 
 class Capturing:
+    """Class object that takes care of capturing the html content as well as storing it inside correct folder for further processing"""
+
     def __init__(self, data, name="Indeed", flag=0):
         self.name = name
         self.data = data
         self.flag = flag
-        self.currentDateAndTime = datetime.now().strftime("%m-%d-%H:%M")
+        self.currentDateAndTime = datetime.now().strftime("%m-%d-%H:%M:%S")
         with open(
             f"logs/{self.currentDateAndTime}_{self.name}.html", "w"
         ) as file_object:
@@ -31,15 +32,19 @@ class Capturing:
             print("\n\n\nCANT DELETE FILE BECAUSE OF FLAG\n\n\n")
 
     def destroy_all_files(self):
-        filelist = [f for f in os.listdir("logs") if f.endswith(".html")]
-        os.remove(os.path.join("logs", f))
+        try:
+            filelist = [f for f in os.listdir("logs") if f.endswith(".html")]
+            for f in filelist:
+                os.remove(os.path.join("logs", f))
+        except FileNotFoundError:
+            pass
 
 
 class Export:
     def __init__(self, data, name="Indeed", flag=0):
         self.name = name
         self.data = data
-        self.currentDateAndTime = datetime.now().strftime("%m-%d-%H:%M")
+        self.currentDateAndTime = datetime.now().strftime("%m-%d-%H:%M:%S")
 
     def export_txt(self):
         dct = self.data
@@ -73,10 +78,17 @@ class Export:
         pass
 
     def destroy_all_files(self):
-        shutil.rmtree("results")
+        try:
+            filelist = [f for f in os.listdir("results") if f.endswith(".txt")]
+            for f in filelist:
+                os.remove(os.path.join("results", f))
+        except FileNotFoundError:
+            pass
 
 
 class Navigation(ABC):
+    """Abstract class that can render navigation on different sites more easily"""
+
     def __init__(self, name, url, keywords, location):
         self.name = name.lower()
         self.url = url
@@ -84,7 +96,8 @@ class Navigation(ABC):
         self.location = location
 
     def path(self, name):
-        if (self.name) == "indeed":
+        """path function that helps navigated with js selector inside of playwright"""
+        if self.name == "indeed":
             dict_path = {
                 "keywords": "#text-input-what",
                 "location": "#text-input-where",
@@ -94,11 +107,13 @@ class Navigation(ABC):
             return dict_path
 
     def inputs(self, name):
+        """input functions that helps accessing inputs fields with js selector inside of playwright and based of the name of the target"""
         if self.name == "indeed":
             dict_inputs = {"keywords": self.keywords, "location": self.location}
             return dict_inputs
 
     def waiting(self, selector=False, delay=0):
+        """Helper function that provides a higher level for controlling the flow of playwright on actions such as waiting for loading, explicitly waiting and so on..."""
         if delay > 0 and selector == False:
             self.page.wait_for_timeout(delay)
 
@@ -109,6 +124,7 @@ class Navigation(ABC):
             self.page.wait_for_load_state("domcontentloaded")
 
     def go_to(self, URL):
+        """Helper function that can help with accessing new URLS"""
         self.page.goto(URL, wait_until="networkidle")
 
     def scroll_to_end_page(self, element_to_see):
@@ -121,6 +137,8 @@ class Navigation(ABC):
 
 
 class Client(Navigation):
+    """Client class browses through indeed based on "site name" URL, "job query", location and depth level"""
+
     def __init__(
         self, name, url, keywords="journalier de production", location="MTL", depth=0
     ):
@@ -154,10 +172,6 @@ class Client(Navigation):
         self.scroll_to_end_page(element_to_see=next_selector)
 
         self.waiting(delay=1200)
-
-        f = open("info.txt", "w")
-        f.write(self.page.content())
-        f.close()
 
         self.clicking(next_selector)
 
@@ -206,12 +220,20 @@ class Client(Navigation):
         # LOOP THROUGH X times
         for _ in range(int(self.depth)):
             self.scan_page(selector_inputs["change"])
+            data = self.get_html()
+            capturing = Capturing(data)
+
+    def get_html_files(self):
+        filelist = [f for f in os.listdir("logs") if f.endswith(".html")]
+        return filelist
 
 
 # flag 0=write to file, keep file after program has runned, 1=write to file, destroy file after program has runned
 
 
 class Parser:
+    """Class object that handles of the parsing based on 1 SINGLE HTML FILE (1 FILE PER CLASS INSTANCE)"""
+
     def __init__(self, file, **args):
         self.file = file
         self.list_args = [args for args in args]
@@ -252,18 +274,72 @@ class Parser:
         return dct
 
 
-# client = Client("indeed", URL, "journalier de production", "laval", depth=3)
-# # Collector(client)
-# lol.parse()
+class Utility:
+    def __init__(self):
+        self.time1 = time.time()
+        self.dct = {}
 
-# lol = Collector("indeed", URL, "journalier de production", "laval")
-# Client("indeed", URL, sys.argv[1], sys.argv[2], sys.argv[3])
+    def generate_checkpoint(self, name):
+        return {name: time.time()}
 
-# Client("indeed", URL, "journalier de production", "laval")
-p = Parser("logs/02-27-19:49_Indeed.html")
+    def get_elapsed_time(self, name1=None, name2=None):
+        if name1 and name2:
+            return (self.dct)[name2] - (self.dct)[name1]
+        elif name1 and not name2:
+            return (self.dct)[name1] - (self.time1)
+        elif not name1 and name2:
+            return (self.dct)[name2] - (self.time1)
+        else:
+            return time.time() - self.time1
+        return time.time() - self.time1
 
-info = p.parse()
+    def count_jobs(self):
+        lst_files = [f for f in os.listdir("results") if f.endswith(".txt")]
+        self.num_files = len(lst_files)
+        self.num_jobs = 0
+        for file in lst_files:
+            with open(f"results/{file}", "r") as file_object:
+                lines = [line.rstrip() for line in file_object]
+                for line in lines:
+                    if line.startswith("Compagie name"):
+                        self.num_jobs += 1
 
-e = Export(info)
-e.export_txt()
-e.destroy_all_files()
+        print(
+            f"Scanned a total of {self.num_jobs} jobs stored in {self.num_files} files"
+        )
+
+    def cleanup_all_files(self):
+
+        lst_files_results = [f for f in os.listdir("results") if f.endswith(".txt")]
+        lst_files_logs = [f for f in os.listdir("logs") if f.endswith(".html")]
+
+
+        for file in lst_files_results:
+            try:
+                os.remove(os.path.join("results", file))
+            except FileNotFoundError:
+                pass
+
+
+        for file in lst_files_results:
+            try:
+                os.remove(os.path.join("logs", file))
+            except FileNotFoundError:
+                pass
+
+
+
+util = Utility()
+
+util.cleanup_all_files()
+
+client = Client("indeed", URL, depth=3)  # Do the initial search
+files = client.get_html_files()  # Get all of the html files
+
+for file in files:
+    p = Parser(f"logs/{file}")
+    info = p.parse()  # get the dictionnary of the necessary information
+    Export(info).export_txt()
+
+util.count_jobs()
+print(f"Whole process took a total of {util.get_elapsed_time()} seconds")
