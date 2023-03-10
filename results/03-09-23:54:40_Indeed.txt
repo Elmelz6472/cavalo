@@ -1,0 +1,131 @@
+Compagie name: Groupe St-Hubert
+	Job title: Journalier de production
+	MetaData: 
+	Full-time
+	Monday to Friday +3Job Card Shelf: 
+	Job Snippet: ['\nEn tant que journalier de production, vos responsabilités seront ;\nFondée en 1951 à Montréal, Les Rôtisseries St-Hubert Ltée comprend plus de 120 restaurants au…\n']
+
+
+Compagie name: MIR inc
+	Job title: Journalier(ère) de production
+	MetaData: 
+	Permanent
+	Additional job detailsBilingualJob Card Shelf: 
+	Easily applyUrgently hiringJob Snippet: ['\nRégime de participation différée aux bénéfices (RPDB);\nTransporter et installer les équipements sur les lieux de travail;\nSuivre les consignes du technicien;\n']
+
+
+Compagie name: MONTPAK INTERNATIONAL INC.
+	Job title: Journalier(ère) de production
+	MetaData: 
+	$19.50–$23.00 an hour
+	Full-time +1
+	Weekend availability +2Job Card Shelf: 
+	Easily applyResponsive employerUrgently hiringHiring multiple candidatesJob Snippet: ["\nLaval, QC H7C 2V1: Faire le trajet sans problème ou prévoir un déménagement avant de prendre son poste (Souhaité).\nType d'emploi : Temps plein, Permanent.\n"]
+
+
+Compagie name: SOGICA
+	Job title: Journalier(ère) de production
+	MetaData: 
+	From $18 an hour
+	Full-time +1
+	Monday to Friday
+	Additional job detailsEnglish not requiredJob Card Shelf: 
+	Easily applyHiring multiple candidatesJob Snippet: ['\nSOGICA est un chef de file canadien dans la production de documents transactionnels et marketing relationnel, y compris des solutions de pointe pour l’archivage…\n']
+
+
+Compagie name: AIM CROIT
+	Job title: Journalier-journalière en construction-3647
+	MetaData: 
+	$14.25–$26.68 an hour
+	Full-time
+	Monday to FridayJob Card Shelf: 
+	Easily applyHiring multiple candidatesJob Snippet: ["\nAvoir une incapacité répondant aux critères ci-haut.\nType d'emploi : Temps plein.\n"]
+
+
+Compagie name: Prelco
+	Job title: Journalier(ère) à la production
+	MetaData: 
+	$19.21 an hour
+	Full-time
+	Day shift +1Job Card Shelf: 
+	Easily applyJob Snippet: ['\nUne entreprise regroupant 6 établissements situés dans l’est de l’Amérique du Nord et plus de 650 employés.\nDes assurances complètes, un régime de retraite et…\n']
+
+
+Compagie name: CORNIVER
+	Job title: Journalier(ère) de production
+	MetaData: 
+	$20.50 an hour
+	Full-time +1
+	Monday to Friday +2Job Card Shelf: 
+	Easily applyHiring multiple candidatesJob Snippet: ["\n5 jours de congés maladie.\nRetirer les pièces de la machine à jet d'eau.\nSens de l’initiative, débrouillardise, polyvalence et souci du détail.\n"]
+
+
+Compagie name: LumenTruss
+	Job title: Journalier(ère) de production
+	MetaData: 
+	Full-time +1
+	Monday to Friday +1Job Card Shelf: 
+	Easily applyHiring multiple candidatesJob Snippet: ["\nTemps supplémentaire au-delà de 40h en fonction des besoins de la production.\nPrès de l'autoroute et de points de transports en commun.\n"]
+
+
+Compagie name: Roxboro Excavation
+	Job title: Journalier de production
+	MetaData: 
+	Full-timeJob Card Shelf: 
+	Job Snippet: ['\nNotre stationnement inclut plus d’une dizaine de bornes de recharge pour véhicules électriques;\nSous la supervision du Surintendant en signalisation, le…\n']
+
+
+Compagie name: Mirazed
+	Job title: Journalier.ère de production
+	MetaData: 
+	Full-time
+	Day shiftJob Card Shelf: 
+	Easily applyJob Snippet: ['\nÊtre capable de soulever des charges de 30 lbs;\nInspecter les pièces pour assurer le contrôle de la qualité (en termes de quantité et d’anomalie apparente);\n']
+
+
+Compagie name: Canada Métal Nord-Amérique
+	Job title: Journalier(ère) de production
+	MetaData: 
+	$22.50–$30.25 an hour
+	Full-time +1
+	Monday to Friday +4Job Card Shelf: 
+	Easily applyHiring multiple candidatesJob Snippet: ["\nQuart de travail de jour (6h à 14h30) ou de soir (14h à 22h).\nSalaire selon compétences de 19,49$ à 25,24$ de l'heure.\nCouper, sabler et meuler les pièces.\n"]
+
+
+Compagie name: ALPHACASTING INC.
+	Job title: Journalier(ère) de production
+	MetaData: 
+	From $16 an hour
+	Full-time +1
+	Monday to Friday +4
+	Additional job detailsFrench not requiredEnglish not requiredBilingualJob Card Shelf: 
+	Easily applyJob Snippet: ['\nSous la responsabilité du superviseur de production, l’opérateur de waterblast à l’aide d’une machine au jet d’eau (Cabinet fermé) est responsable doit nettoyer…\n']
+
+
+Compagie name: Chocolat Jean-Talon
+	Job title: Journalier(ère) de production
+	MetaData: 
+	From $15.25 an hour
+	Full-time
+	Monday to Friday +5Job Card Shelf: 
+	Easily applyResponsive employerHiring multiple candidatesJob Snippet: ["\nEmploi à temps plein, 40 hrs semaine.\nType d'emploi : Temps plein, Permanent.\nType d'emploi : Temps plein.\n"]
+
+
+Compagie name: Recrutement GK Inc
+	Job title: Journalier de production / Opérateur
+	MetaData: 
+	From $23.07 an hour
+	Full-time +1
+	Monday to Friday +2Job Card Shelf: 
+	Easily applyUrgently hiringJob Snippet: ['\nMettre le béton dans les cavités du moule à l’aide de chaudières (≤40 lb).\nAugmentation du salaire après 3-6 et 9 mois;\nAppliquer la cire sur le moule.\n']
+
+
+Compagie name: Oldcastle BuildingEnvelope Canada Inc.
+	Job title: Apprenti-vitrier -journalier de production
+	MetaData: 
+	$17.21–$20.07 an hour
+	Full-time +1
+	Monday to Friday +3Job Card Shelf: 
+	Easily applyHiring multiple candidatesJob Snippet: ['\nÀ titre de journalier de production (aide-général), ton rôle sera principalement de participer à diverses étapes de la transformation du verre.\n']
+
+
