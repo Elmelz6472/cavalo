@@ -1,5 +1,6 @@
 import sys
 import os
+import glob
 import time
 import pandas as pd
 from datetime import datetime
@@ -295,51 +296,48 @@ class Utility:
 
     def count_jobs(self):
         lst_files = [f for f in os.listdir("results") if f.endswith(".txt")]
-        self.num_files = len(lst_files)
-        self.num_jobs = 0
+        num_files = len(lst_files)
+        num_jobs = 0
         for file in lst_files:
             with open(f"results/{file}", "r") as file_object:
                 lines = [line.rstrip() for line in file_object]
                 for line in lines:
                     if line.startswith("Compagie name"):
-                        self.num_jobs += 1
+                        num_jobs += 1
+
+
+        num_files_html = len([f for f in os.listdir("logs") if f.endswith(".html")])
+
+
 
         print(
-            f"Scanned a total of {self.num_jobs} jobs stored in {self.num_files} files"
+            f"Scanned a total of {num_jobs} jobs stored in {num_files} result files.\nData is stored in {num_files_html} html files"
         )
 
-    def cleanup_all_files(self):
-
-        lst_files_results = [f for f in os.listdir("results") if f.endswith(".txt")]
-        lst_files_logs = [f for f in os.listdir("logs") if f.endswith(".html")]
-
-
-        for file in lst_files_results:
-            try:
-                os.remove(os.path.join("results", file))
-            except FileNotFoundError:
-                pass
-
-
-        for file in lst_files_results:
-            try:
-                os.remove(os.path.join("logs", file))
-            except FileNotFoundError:
-                pass
+    def cleanup_all_files(self, flag=0):
+        files = glob.glob('logs/*')
+        for f in files:
+            os.remove(f)
+        if flag:
+            files = glob.glob('results/*')
+            for f in files:
+                os.remove(f)
 
 
 
-util = Utility()
 
-util.cleanup_all_files()
+if __name__ == "__main__":
+    util = Utility()
 
-client = Client("indeed", URL, depth=3)  # Do the initial search
-files = client.get_html_files()  # Get all of the html files
+    util.cleanup_all_files(flag=1)
 
-for file in files:
-    p = Parser(f"logs/{file}")
-    info = p.parse()  # get the dictionnary of the necessary information
-    Export(info).export_txt()
+    client = Client("indeed", URL, depth=3)  # Do the initial search
+    files = client.get_html_files()  # Get all of the html files
 
-util.count_jobs()
-print(f"Whole process took a total of {util.get_elapsed_time()} seconds")
+    for file in files:
+        p = Parser(f"logs/{file}")
+        info = p.parse()  # get the dictionnary of the necessary information
+        Export(info).export_txt()
+
+    util.count_jobs()
+    print(f"Whole process took a total of {util.get_elapsed_time()} seconds")
