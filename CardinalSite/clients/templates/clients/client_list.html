@@ -1,0 +1,51 @@
+{% extends 'clients/base.html' %}
+{% load custom_filters %}
+{% block title %}Client List{% endblock %}
+{% block content %}
+    <h1>Client List</h1>
+    <a href="{% url 'clients:client_create' %}" class="btn btn-primary mb-3">Add Client</a>
+    <table class="table table-striped mt-3 mb-5">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Date Joined</th>  <!-- Add this line -->
+                <th>Contact</th>  <!-- Add this line -->
+                <th>Number of Employees</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+                <tr>
+                    <td>{{ client.name }}</td>
+                    <td>{{ client.location }}</td>
+                    <td>{{ client.date_joined|date:"F j, Y" }}</td>
+                    <td>
+                        <p>Email: {{ client.email }}</p>  <!-- Add this line -->
+                        <p>Phone: {{ client.phonenumber }}</p>  <!-- Add this line -->
+                    </td>
+                    {% with client.pk as client_pk %}
+                        <td>{{ client_employee_count|get_item:client_pk }}</td>
+                    {% endwith %}
+                    <td>
+                        <div class="d-flex flex-wrap">
+                            <a href="{% url 'clients:client_view' client.pk %}" class="btn btn-success btn-sm mr-2 mb-2">View</a>
+                            <a href="{% url 'clients:client_edit' client.pk %}" class="btn btn-warning btn-sm mr-2 mb-2">Edit</a>
+                            <a href="#" onclick="confirmDelete({{ client.pk }})" class="btn btn-danger btn-sm mb-2">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% block extra_js %}
+<script>
+  function confirmDelete(clientId) {
+    if (confirm("Are you sure you want to delete this client?")) {
+      window.location.href = "{% url 'clients:client_delete' 0 %}".replace('0', clientId);
+    }
+  }
+</script>
+{% endblock %}

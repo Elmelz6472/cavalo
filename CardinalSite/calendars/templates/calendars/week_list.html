@@ -1,0 +1,14 @@
+{% extends 'calendars/base.html' %}
+{% block title %}Week List{% endblock %}
+{% block content %}
+    <h1>Week List</h1>
+    <a href="{% url 'calendars:week_create' %}" class="btn btn-primary mb-3">Add Week</a>
+    <ul class="list-group">
+        {% for week in weeks %}
+            <li class="list-group-item">
+                <a href="{% url 'calendars:work_entry_list' week.pk %}">{{ week }}</a>
+                <a href="{% url 'calendars:week_delete' week.pk %}" class="btn btn-danger btn-sm float-right">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

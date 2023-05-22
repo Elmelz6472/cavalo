@@ -1,0 +1,10 @@
+{% extends 'clients/base.html' %}
+{% block title %}Client Detail{% endblock %}
+{% block content %}
+    <h1>{{ client.name }}</h1>
+    <p>Location: {{ client.location }}</p>
+    <p>Email: {{ client.email }}</p>
+    <p>Phone: {{ client.phonenumber }}</p>
+    <p>Date Joined: {{ client.date_joined|date:"F j, Y" }}</p>
+    <a href="{% url 'clients:client_list' %}" class="btn btn-primary">Back to Client List</a>
+{% endblock %}

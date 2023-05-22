@@ -1,0 +1,63 @@
+{% extends 'clients/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}{% if form.instance.pk %}Edit{% else %}Add{% endif %} Client{% endblock %}
+{% block content %}
+    <h1 class="mb-4">{% if form.instance.pk %}Edit{% else %}Add{% endif %} Client</h1>
+
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group row">
+            <label for="{{ form.name.auto_id }}" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
+                {{ form.name|add_class:'form-control' }}
+                {% if form.name.errors %}
+                    <div class="invalid-feedback" style="display:block;">
+                        {{ form.name.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="{{ form.location.auto_id }}" class="col-sm-2 col-form-label">Location</label>
+            <div class="col-sm-10">
+                {{ form.location|add_class:'form-control' }}
+                {% if form.location.errors %}
+                    <div class="invalid-feedback" style="display:block;">
+                        {{ form.location.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="{{ form.phonenumber.auto_id }}" class="col-sm-2 col-form-label">Phone Number</label>
+            <div class="col-sm-10">
+                {{ form.phonenumber|add_class:'form-control' }}
+                {% if form.phonenumber.errors %}
+                    <div class="invalid-feedback" style="display:block;">
+                        {{ form.phonenumber.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="{{ form.email.auto_id }}" class="col-sm-2 col-form-label">Email</label>
+            <div class="col-sm-10">
+                {{ form.email|add_class:'form-control' }}
+                {% if form.email.errors %}
+                    <div class="invalid-feedback" style="display:block;">
+                        {{ form.email.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-10 offset-sm-2">
+                <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Update{% else %}Add{% endif %} Client</button>
+                <a href="{% url 'clients:client_list' %}" class="btn btn-secondary">Back to Client List</a>
+            </div>
+        </div>
+    </form>
+{% endblock %}
