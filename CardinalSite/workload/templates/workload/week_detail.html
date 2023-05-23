@@ -1,0 +1,41 @@
+{% extends 'workload/base.html' %}
+{% block title %}Week Details{% endblock %}
+{% block content %}
+    <h1>Week Details</h1>
+    <h2>Start Date: {{ week.start_date|date:"F j, Y" }}</h2>
+    <h2>Client: {{ week.client.name }}</h2>
+    <h2>Employees:</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    {% for date in week_dates %}
+                        <th>{{ date|date:"D M d" }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                    <tr>
+                        <td>{{ employee.first_name }} {{ employee.last_name }}</td>
+                        {% for date in week_dates %}
+                            <td>
+                                {% if employee_hours.employee.pk.date|date:"Y-m-d" %}
+                                    {{ employee_hours.employee.pk.date|date:"Y-m-d" }}
+                                    <a href="{% url 'workload:employee_hours_edit' employee.pk week.pk date %}" class="btn btn-sm btn-warning">Edit</a>
+                                {% else %}
+                                    <input type="number" name="hours_worked" value="0" min="0" max="24">
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" value="Save Changes" class="btn btn-primary">
+    </form>
+    <a href="{% url 'workload:week_list' %}" class="btn btn-primary">Back to Weeks List</a>
+{% endblock %}

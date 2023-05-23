@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "employees",
     "widget_tweaks",
     "phonenumber_field",
-    "calendars"
+    'workload',
 ]
 
 MIDDLEWARE = [
