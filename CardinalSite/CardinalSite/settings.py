@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     "employees",
     "widget_tweaks",
     "phonenumber_field",
-    'workload',
+    "bootstrap_datepicker_plus",
+    "week"
 ]
 
 MIDDLEWARE = [

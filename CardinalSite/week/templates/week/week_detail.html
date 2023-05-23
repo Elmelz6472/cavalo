@@ -1,0 +1,46 @@
+{% extends 'week/base.html' %}
+{% load custom_filters %}
+
+{% block title %}Week View{% endblock %}
+
+{% block content %}
+<h1>Week from {{ week.start_date }} to {{ week.end_date }}</h1>
+<p>Client: {{ week.client.name }}</p>
+
+<h2>Employees</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+            <th>Sunday</th>
+            <th>Total Pay</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+       {% for employee in employees %}
+    <tr>
+        <td>{{ employee.first_name }} {{ employee.last_name }}</td>
+        {% with work=employee_works|get_item:employee.pk %}
+            <td>{{ work.monday }}</td>
+            <td>{{ work.tuesday }}</td>
+            <td>{{ work.wednesday }}</td>
+            <td>{{ work.thursday }}</td>
+            <td>{{ work.friday }}</td>
+            <td>{{ work.saturday }}</td>
+            <td>{{ work.sunday }}</td>
+            <td>{{ work.total_hours }}</td>
+        {% endwith %}
+        <td><a href="{% url 'week:week_work_edit' week.pk employee.pk %}" class="btn btn-warning btn-sm">Edit</a></td>
+    </tr>
+{% endfor %}
+
+    </tbody>
+</table>
+{% endblock %}
