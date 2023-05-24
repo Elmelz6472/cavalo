@@ -25,8 +25,8 @@
                     <td>{{ client.location }}</td>
                     <td>{{ client.date_joined|date:"F j, Y" }}</td>
                     <td>
-                        <p>Email: {{ client.email }}</p>
-                        <p>Phone: {{ client.phonenumber }}</p>
+                        <p>{{ client.email }}</p>
+                        <p>{{ client.phonenumber }}</p>
                     </td>
                     {% with client.pk as client_pk %}
                         <td>{{ client_employee_count|get_item:client_pk }}</td>

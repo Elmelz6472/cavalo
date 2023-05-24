@@ -46,6 +46,7 @@
                     <th>Total Hours</th>
                     <th>Total Pay</th>
                     <th>Bonus</th>
+                    <th>Hourly Salary</th>
                 </tr>
             </thead>
             <tbody>
@@ -66,6 +67,8 @@
                     <td>{{ work.total_hours }}</td>
                     <td>{{ work.total_pay }}</td>
                     <td>{{ work.bonus }}</td>
+                    <td>{{ employee.hourly_salary }}</td>
+
                 </tr>
                 {% endfor %}
             </tbody>

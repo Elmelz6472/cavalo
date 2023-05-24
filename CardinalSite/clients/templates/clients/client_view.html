@@ -10,8 +10,8 @@
                 <h5 class="card-title"><strong>Location:</strong> {{ client.location }}</h5>
                 <p class="card-text"><strong>Email:</strong> {{ client.email }}</p>
                 <p class="card-text"><strong>Phone:</strong> {{ client.phonenumber }}</p>
-                <p class="card-title"><strong>Total invoices since beginning:</strong> {{ total_invoice }}$</p>
-                <p class="card-title"><strong>Total Pay for the period (employee without bonuses):</strong> {{ total_pay_global }}$</p>
+                <p class="card-title"><strong>Total invoices since the beginning:</strong> {{ total_invoice }}$</p>
+                <p class="card-title"><strong>Total pay since the beginning (employee without bonuses):</strong> {{ total_pay_global }}$</p>
                 <p class="card-text"><strong>Date Joined:</strong> {{ client.date_joined|date:"F j, Y" }}</p>
                 <div class="text-center mt-4">
                     <a href="{% url 'clients:client_list' %}" class="btn btn-secondary">Back to Client List</a>
