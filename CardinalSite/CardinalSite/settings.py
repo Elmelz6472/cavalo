@@ -43,7 +43,10 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "bootstrap_datepicker_plus",
     "week",
-    "notes"
+    "notes",
+    "import_export",
+    'easy_pdf',
+
 ]
 
 MIDDLEWARE = [

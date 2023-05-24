@@ -3,7 +3,20 @@ from .models import Week, EmployeeWeekWork
 from .forms import WeekForm, EmployeeWeekWorkForm
 from datetime import timedelta
 from employees.models import Employee
+from django.http import JsonResponse
+from django.template.loader import get_template
+from django.http import HttpResponse
+from .resources import EmployeeWeekWorkResource
 
+
+def week_export(request, pk):
+    week = get_object_or_404(Week, pk=pk)
+    employee_week_works = EmployeeWeekWork.objects.filter(week=week)
+    employee_week_work_resource = EmployeeWeekWorkResource()
+    dataset = employee_week_work_resource.export(employee_week_works)
+    response = HttpResponse(dataset.csv, content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{week.start_date}_to_{week.end_date}_work_schedule.csv"'
+    return response
 
 
 def week_list(request):
@@ -58,3 +71,4 @@ def week_work_edit(request, week_pk, employee_pk):
 
 
     return render(request, 'week/week_work_form.html', {'form': form})
+

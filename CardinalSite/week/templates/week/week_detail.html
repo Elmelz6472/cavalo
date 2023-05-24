@@ -10,6 +10,9 @@
         <h2 class="text-muted">Client: {{ week.client.name }}</h2>
     </div>
     <a href="{% url 'week:week_list' %}" class="btn btn-outline-primary mb-3">Back to List</a>
+
+    <a href="{% url 'week:week_export' week.pk %}" class="btn btn-outline-success mb-3">Export to CSV</a>
+
 </div>
 
 <div class="table-responsive">
