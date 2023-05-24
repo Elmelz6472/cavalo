@@ -14,6 +14,7 @@
                 <th>Date Joined</th>
                 <th>Contact</th>
                 <th>Number of Employees</th>
+                <th>Hourly Rate</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -31,6 +32,10 @@
                         <td>{{ client_employee_count|get_item:client_pk }}</td>
                     {% endwith %}
                     <td>
+                       {{ client.hourly_rate }}$
+                    </td>
+                    <td>
+
                         <div class="d-flex flex-wrap">
                             <a href="{% url 'clients:client_view' client.pk %}" class="btn btn-success btn-sm mr-2 mb-2">View</a>
                             <a href="{% url 'clients:client_edit' client.pk %}" class="btn btn-warning btn-sm mr-2 mb-2">Edit</a>

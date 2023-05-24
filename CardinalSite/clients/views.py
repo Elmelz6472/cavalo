@@ -19,6 +19,7 @@ def client_export(request):
 
 def client_view(request, pk):
     client = get_object_or_404(Client, pk=pk)
+    employees = Employee.objects.filter(work_location=client)
     weeks = Week.objects.filter(client=client)
     work_data = EmployeeWeekWork.objects.filter(week__in=weeks).annotate(
         total_pay=(
@@ -26,7 +27,7 @@ def client_view(request, pk):
         )
     ).values('week__start_date', 'total_pay').order_by('week__start_date')
 
-    # Group work_data by 'week__start_date' and sum up 'total_pay' for each group
+
     grouped_work_data = []
     for key, group in groupby(work_data, key=itemgetter('week__start_date')):
         total_pay = sum(item['total_pay'] for item in group)
@@ -34,7 +35,24 @@ def client_view(request, pk):
 
     total_pay_global = sum(item['total_pay'] for item in grouped_work_data)
 
-    return render(request, 'clients/client_view.html', {'client': client, 'work_data': grouped_work_data, 'total_pay_global': total_pay_global})
+
+    invoice_data = EmployeeWeekWork.objects.filter(week__in=weeks).annotate(
+        total_hours=(
+            Sum(F('monday') + F('tuesday') + F('wednesday') + F('thursday') + F('friday') + F('saturday') + F('sunday'))
+        ),
+        weekly_invoice=F('total_hours') * F('week__client__hourly_rate')
+    ).values('week__start_date', 'weekly_invoice').order_by('week__start_date')
+
+    grouped_invoice_data = []
+    total_invoice = 0
+    for key, group in groupby(invoice_data, key=itemgetter('week__start_date')):
+        weekly_invoice = sum(item['weekly_invoice'] for item in group)
+        total_invoice += weekly_invoice
+        grouped_invoice_data.append({'week__start_date': key, 'weekly_invoice': weekly_invoice})
+
+    return render(request, 'clients/client_view.html', {'client': client, 'work_data': grouped_work_data, 'total_pay_global': total_pay_global, 'invoice_data': grouped_invoice_data, 'employees': employees,
+    'total_invoice': total_invoice})
+
 
 
 def client_list(request):

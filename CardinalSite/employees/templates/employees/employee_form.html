@@ -33,6 +33,17 @@
         </div>
     </div>
     <div class="form-group row">
+            <label for="{{ form.phonenumber.auto_id }}" class="col-sm-2 col-form-label">Phone Number</label>
+            <div class="col-sm-10">
+                {{ form.phonenumber|add_class:'form-control' }}
+                {% if form.phonenumber.errors %}
+                    <div class="invalid-feedback" style="display:block;">
+                        {{ form.phonenumber.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+    </div>
+    <div class="form-group row">
         <label for="{{ form.hourly_salary.id_for_label }}" class="col-sm-2 col-form-label">Hourly Salary</label>
         <div class="col-sm-10">
             {{ form.hourly_salary|add_class:'form-control' }}

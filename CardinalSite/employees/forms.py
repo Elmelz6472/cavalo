@@ -9,4 +9,4 @@ class EmployeeForm(forms.ModelForm):
 
     class Meta:
         model = Employee
-        fields = ['first_name', 'last_name', 'is_driver', 'hourly_salary', 'work_location', 'date_joined']
+        fields = ['first_name', 'last_name', 'phonenumber', 'is_driver', 'hourly_salary', 'work_location', 'date_joined']

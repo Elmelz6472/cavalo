@@ -10,6 +10,7 @@
                 <h1 class="text-center text-white">{{ employee.first_name }} {{ employee.last_name }}</h1>
             </div>
             <div class="card-body">
+                <p class="card-text"><strong>Contact:</strong>{{ employee.phonenumber }}</p>
                 <p class="card-text"><strong>Hourly Salary:</strong> ${{ employee.hourly_salary }}</p>
                 <p class="card-text"><strong>Work Location:</strong> <a href="{% url 'clients:client_view' pk=employee.work_location.pk %}">{{ employee.work_location }}</a></p>
                 <p class="card-text"><strong>Date Joined:</strong> {{ employee.date_joined|date:"F j, Y" }}</p>
@@ -82,7 +83,7 @@
       data: {
         labels: [{% for data in work_data %}'{{ data.week.start_date|date:"F j, Y" }}',{% endfor %}],
         datasets: [{
-            label: 'Weekly payments to employees',
+            label: 'Weekly earnings based on the week',
             data: [{% for data in work_data %} '{{ data.total_pay }}',{% endfor %}],
               fill: false,
               borderColor: 'rgb(75, 192, 192)',

@@ -9,6 +9,7 @@
             <tr>
                 <th>Name</th>
                 <th>Is Driver</th>
+                <th>Contact</th>
                 <th>Hourly Salary</th>
                 <th>Work Location</th>
                 <th>Date Joined</th>
@@ -20,6 +21,7 @@
                 <tr>
                     <td>{{ employee.first_name }} {{ employee.last_name }}</td>
                     <td>{{ employee.is_driver }}</td>
+                    <td>{{ employee.phonenumber }}</td>
                     <td>{{ employee.hourly_salary }}</td>
                     <td><a href="{% url 'clients:client_view' pk=employee.work_location.pk %}">{{ employee.work_location }}</a></td>
                     <td>{{ employee.date_joined }}</td>
