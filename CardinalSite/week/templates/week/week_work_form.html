@@ -3,10 +3,49 @@
 {% block title %}Edit Week Work{% endblock %}
 
 {% block content %}
-<h1>Edit Week Work</h1>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header text-center">
+                <h2>Edit Week Work</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.start_date.label_tag }} {{ form.start_date }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.client.label_tag }} {{ form.client }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.monday.label_tag }} {{ form.monday }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.tuesday.label_tag }} {{ form.tuesday }}
+                    </div>
+                  <div class="form-group">
+                        {{ form.wednesday.label_tag }} {{ form.wednesday }}
+                    </div>
+                  <div class="form-group">
+                        {{ form.thursday.label_tag }} {{ form.thursday }}
+                    </div>
+                  <div class="form-group">
+                        {{ form.friday.label_tag }} {{ form.friday }}
+                    </div>
+                  <div class="form-group">
+                        {{ form.saturday.label_tag }} {{ form.saturday }}
+                    </div>
+                  <div class="form-group">
+                        {{ form.sunday.label_tag }} {{ form.sunday }}
+                    </div>
+                  <div class="form-group">
+                        {{ form.bonus.label_tag }} {{ form.bonus }}
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,26 +1,56 @@
 {% extends 'clients/base.html' %}
 {% block title %}Client Detail{% endblock %}
 {% block content %}
-    <div class="container mt-5">
-        <div class="card">
-            <div class="card-header">
-                <h1 class="text-center">{{ client.name }}</h1>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title"><strong>Location:</strong> {{ client.location }}</h5>
-                <p class="card-text"><strong>Email:</strong> {{ client.email }}</p>
-                <p class="card-text"><strong>Phone:</strong> {{ client.phonenumber }}</p>
-                <p class="card-title"><strong>Total invoices since the beginning:</strong> {{ total_invoice }}$</p>
-                <p class="card-title"><strong>Total pay since the beginning (employee without bonuses):</strong> {{ total_pay_global }}$</p>
-                <p class="card-text"><strong>Date Joined:</strong> {{ client.date_joined|date:"F j, Y" }}</p>
-                <div class="text-center mt-4">
-                    <a href="{% url 'clients:client_list' %}" class="btn btn-secondary">Back to Client List</a>
-                    <a href="{% url 'clients:client_edit' client.pk %}" class="btn btn-warning">Edit</a>
-                    <a href="{% url 'clients:client_list' %}" onclick="confirmDelete({{ client.pk }})" class="btn btn-danger">Delete</a>
+
+
+<div class="container mt-5">
+    <div class="card border-primary mb-3 shadow">
+        <div class="card-header bg-primary text-white text-center">
+            <h2 class="mb-0">{{ client.name }}</h2>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-sm-6">
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Location:</strong></h5>
+                        <p class="card-text pl-2">{{ client.location }}</p>
+                    </div>
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Email:</strong></h5>
+                        <p class="card-text pl-2">{{ client.email }}</p>
+                    </div>
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Phone:</strong></h5>
+                        <p class="card-text pl-2">{{ client.phonenumber }}</p>
+                    </div>
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Date Joined:</strong></h5>
+                        <p class="card-text pl-2">{{ client.date_joined|date:"F j, Y" }}</p>
+                    </div>
                 </div>
+                <div class="col-sm-6">
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Total Invoices Since the Beginning:</strong></h5>
+                        <p class="card-text pl-2">{{ total_invoice }}$</p>
+                    </div>
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Total Pay (without bonuses):</strong></h5>
+                        <p class="card-text pl-2">{{ total_pay_global }}$</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="{% url 'clients:client_list' %}" class="btn btn-secondary">Back to Client List</a>
+                <a href="{% url 'clients:client_edit' client.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'clients:client_list' %}" onclick="confirmDelete({{ client.pk }})" class="btn btn-danger">Delete</a>
             </div>
         </div>
     </div>
+</div>
+
+
+
+
 
     <div class="container mt-5">
         <!-- Canvas element where Chart.js will render the chart -->
@@ -38,7 +68,8 @@
                 type: 'line',
                 data: {
                     labels: [{% for data in work_data %}'{{ data.week__start_date|date:"F j, Y" }}',{% endfor %}], // weeks
-                    datasets: [{
+                   datasets: [
+                    {
                         label: 'Weekly payments to employees',
                         data: [{% for data in work_data %} '{{ data.total_pay }}',{% endfor %}], // payments
                         fill: false,
@@ -50,7 +81,15 @@
                         fill: false,
                         borderColor: 'rgb(255, 99, 132)',
                         tension: 0.1
-                    }]
+                    },{
+                        label: 'Brute Profit',
+                        data: [{% for data in diff_data %} '{{ data.difference }}',{% endfor %}], // difference
+                        fill: false,
+                        borderColor: 'rgb(153, 102, 255)',
+                        tension: 0.1
+                    }
+                ]
+
                 },
                 options: {
                     scales: {

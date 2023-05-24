@@ -4,22 +4,41 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Employee Details Card -->
-    <div class="container mt-5">
-        <div class="card shadow-lg mb-4">
-             <div class="card-header {% if employee.is_driver %}bg-success{% else %}bg-primary{% endif %}">
-                <h1 class="text-center text-white">{{ employee.first_name }} {{ employee.last_name }}</h1>
-            </div>
-            <div class="card-body">
-                <p class="card-text"><strong>Contact:</strong>{{ employee.phonenumber }}</p>
-                <p class="card-text"><strong>Hourly Salary:</strong> ${{ employee.hourly_salary }}</p>
-                <p class="card-text"><strong>Work Location:</strong> <a href="{% url 'clients:client_view' pk=employee.work_location.pk %}">{{ employee.work_location }}</a></p>
-                <p class="card-text"><strong>Date Joined:</strong> {{ employee.date_joined|date:"F j, Y" }}</p>
-                <div class="text-center mt-4">
-                    <a href="{% url 'employees:employee_update' employee.pk %}" class="btn btn-warning">Edit</a>
-                    <a href="{% url 'employees:employee_list' %}" class="btn btn-secondary">Back to Employee List</a>
+<div class="container mt-5">
+    <div class="card border-primary mb-3 shadow">
+        <div class="card-header {% if employee.is_driver %}bg-success{% else %}bg-primary{% endif %} text-white text-center">
+            <h2 class="mb-0">{{ employee.first_name }} {{ employee.last_name }}</h2>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-sm-6">
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Contact:</strong></h5>
+                        <p class="card-text pl-2">{{ employee.phonenumber }}</p>
+                    </div>
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Hourly Salary:</strong></h5>
+                        <p class="card-text pl-2">${{ employee.hourly_salary }}</p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Work Location:</strong></h5>
+                        <p class="card-text pl-2"><a href="{% url 'clients:client_view' pk=employee.work_location.pk %}">{{ employee.work_location }}</a></p>
+                    </div>
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Date Joined:</strong></h5>
+                        <p class="card-text pl-2">{{ employee.date_joined|date:"F j, Y" }}</p>
+                    </div>
                 </div>
             </div>
+            <div class="text-center mt-4">
+                <a href="{% url 'employees:employee_update' employee.pk %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'employees:employee_list' %}" class="btn btn-secondary">Back to Employee List</a>
+            </div>
         </div>
+    </div>
+</div>
 
         <!-- Chart.js Card -->
         <div class="card shadow-lg mb-4">
@@ -76,7 +95,7 @@
                 </div>
             </div>
         </div>
-    </div>
+
 
 <script>
     window.onload = function() {

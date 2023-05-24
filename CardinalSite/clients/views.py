@@ -50,8 +50,15 @@ def client_view(request, pk):
         total_invoice += weekly_invoice
         grouped_invoice_data.append({'week__start_date': key, 'weekly_invoice': weekly_invoice})
 
+    diff_data = []
+    for work, invoice in zip(grouped_work_data, grouped_invoice_data):
+        if work['week__start_date'] == invoice['week__start_date']:
+            difference = invoice['weekly_invoice'] - work['total_pay']
+            diff_data.append({'week__start_date': work['week__start_date'], 'difference': difference})
+
+
     return render(request, 'clients/client_view.html', {'client': client, 'work_data': grouped_work_data, 'total_pay_global': total_pay_global, 'invoice_data': grouped_invoice_data, 'employees': employees,
-    'total_invoice': total_invoice})
+    'total_invoice': total_invoice, 'diff_data': diff_data})
 
 
 
