@@ -26,13 +26,14 @@
                 <th>Sunday</th>
                 <th>Total Hours</th>
                 <th>Total Pay</th>
+                <th>Bonus</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
            {% for employee in employees %}
         <tr>
-            <td>
+            <td {% if employee.is_driver %}style="background-color: #90EE90;"{% endif %}>
                 <a href="{% url 'employees:employee_view' employee.pk %}">
                     {{ employee.first_name }} {{ employee.last_name }}
                 </a>
@@ -47,6 +48,7 @@
                 <td>{{ work.sunday }}</td>
                 <td>{{ work.total_hours }}</td>
                 <td>{{ work.total_pay }}</td>
+                <td>{{ work.bonus }}</td>
             {% endwith %}
             <td><a href="{% url 'week:week_work_edit' week.pk employee.pk %}" class="btn btn-warning btn-sm">Edit</a></td>
         </tr>

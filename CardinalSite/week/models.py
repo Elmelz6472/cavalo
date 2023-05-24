@@ -20,6 +20,7 @@ class EmployeeWeekWork(models.Model):
     friday = models.IntegerField(default=0)
     saturday = models.IntegerField(default=0)
     sunday = models.IntegerField(default=0)
+    bonus = models.IntegerField(default=0)
 
     class Meta:
         unique_together = [['week', 'employee']]
@@ -28,4 +29,4 @@ class EmployeeWeekWork(models.Model):
         return (self.monday + self.tuesday + self.wednesday + self.thursday + self.friday + self.saturday + self.sunday)
 
     def total_pay(self):
-        return self.total_hours() * self.employee.hourly_salary
+        return (self.total_hours() * self.employee.hourly_salary) + self.bonus

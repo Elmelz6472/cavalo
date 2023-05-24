@@ -16,4 +16,4 @@ class WeekForm(forms.ModelForm):
 class EmployeeWeekWorkForm(forms.ModelForm):
     class Meta:
         model = EmployeeWeekWork
-        fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+        fields = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'bonus']
