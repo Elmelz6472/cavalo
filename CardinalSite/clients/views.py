@@ -4,6 +4,8 @@ from .models import Client
 from .forms import ClientForm
 from employees.models import Employee
 from week.models import EmployeeWeekWork, Week
+from itertools import groupby
+from operator import itemgetter
 
 
 def client_view(request, pk):
@@ -15,10 +17,15 @@ def client_view(request, pk):
         )
     ).values('week__start_date', 'total_pay').order_by('week__start_date')
 
-    total_pay_global = work_data.aggregate(total=Sum('total_pay'))['total']
+    # Group work_data by 'week__start_date' and sum up 'total_pay' for each group
+    grouped_work_data = []
+    for key, group in groupby(work_data, key=itemgetter('week__start_date')):
+        total_pay = sum(item['total_pay'] for item in group)
+        grouped_work_data.append({'week__start_date': key, 'total_pay': total_pay})
 
-    return render(request, 'clients/client_view.html', {'client': client, 'work_data': work_data, 'total_pay_global': total_pay_global})
+    total_pay_global = sum(item['total_pay'] for item in grouped_work_data)
 
+    return render(request, 'clients/client_view.html', {'client': client, 'work_data': grouped_work_data, 'total_pay_global': total_pay_global})
 
 
 def client_list(request):

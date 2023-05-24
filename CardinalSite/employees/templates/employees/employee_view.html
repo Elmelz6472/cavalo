@@ -9,7 +9,7 @@
             </div>
             <div class="card-body">
                 <p class="card-text"><strong>Hourly Salary:</strong> {{ employee.hourly_salary }}</p>
-                <p class="card-text"><strong>Work Location:</strong> {{ employee.work_location }}</p>
+                <p class="card-text"><strong>Work Location:</strong> <a href="{% url 'clients:client_view' pk=employee.work_location.pk %}">{{ employee.work_location }} </a></p>
                 <p class="card-text"><strong>Date Joined:</strong> {{ employee.date_joined|date:"F j, Y" }}</p>
                 <div class="text-center mt-4">
                     <a href="{% url 'employees:employee_update' employee.pk %}" class="btn btn-warning">Edit</a>
@@ -28,10 +28,10 @@ window.onload = function() {
   var chart = new Chart(ctx, {
       type: 'line',
       data: {
-          labels: [{% for data in work_data %}'{{ data.week.start_date|date:"F j, Y" }}',{% endfor %}], // weeks
-          datasets: [{
-              label: 'Weekly earnings',
-              data: [{% for data in work_data %}'{{ data.total_pay }}',{% endfor %}], // earnings
+        labels: [{% for data in work_data %}'{{ data.week__start_date|date:"F j, Y" }}',{% endfor %}],
+        datasets: [{
+            label: 'Weekly payments to employees',
+            data: [{% for data in work_data %} '{{ data.total_pay }}',{% endfor %}],
               fill: false,
               borderColor: 'rgb(75, 192, 192)',
               tension: 0.1

@@ -32,7 +32,11 @@
         <tbody>
            {% for employee in employees %}
         <tr>
-            <td>{{ employee.first_name }} {{ employee.last_name }}</td>
+            <td>
+                <a href="{% url 'employees:employee_view' employee.pk %}">
+                    {{ employee.first_name }} {{ employee.last_name }}
+                </a>
+            </td>
             {% with work=employee_works|get_item:employee.pk %}
                 <td>{{ work.monday }}</td>
                 <td>{{ work.tuesday }}</td>

@@ -20,7 +20,7 @@
                     <td>{{ employee.first_name }} {{ employee.last_name }}</td>
                     <td>{{ employee.is_driver }}</td>
                     <td>{{ employee.hourly_salary }}</td>
-                    <td>{{ employee.work_location }}</td>
+                    <td><a href="{% url 'clients:client_view' pk=employee.work_location.pk %}">{{ employee.work_location }}</a></td>
                     <td>{{ employee.date_joined }}</td>
                     <td>
                         <div class="d-flex flex-wrap">
