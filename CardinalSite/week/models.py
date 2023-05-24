@@ -25,4 +25,7 @@ class EmployeeWeekWork(models.Model):
         unique_together = [['week', 'employee']]
 
     def total_hours(self):
-        return self.monday + self.tuesday + self.wednesday + self.thursday + self.friday + self.saturday + self.sunday
+        return (self.monday + self.tuesday + self.wednesday + self.thursday + self.friday + self.saturday + self.sunday)
+
+    def total_pay(self):
+        return self.total_hours() * self.employee.hourly_salary

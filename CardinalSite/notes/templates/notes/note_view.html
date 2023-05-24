@@ -1,0 +1,103 @@
+{% extends 'notes/base.html' %}
+{% load tz %}
+
+{% block title %}Notes{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Notes</h1>
+    <p>Last saved:
+        <span id="timestamp" data-timestamp="{{ note.last_modified|date:'U' }}">
+            {{ note.last_modified|timezone:"America/New_York"|timesince }} ago
+        </span>
+<textarea id="note-content" class="form-control" rows="10" style="width: 100%;">{{ note.content }}</textarea>
+<div class="d-flex justify-content-between mb-4">
+    <div>
+    </p>
+        <input type="file" id="file-input" style="display: none;">
+        <button class="btn btn-outline-secondary" id="open-file">Open File</button>
+        <button class="btn btn-outline-success" id="download-note">Download Note</button>
+        <button class="btn btn-outline-primary" id="copy-note">Copy to Clipboard</button>
+    </div>
+</div>
+<button class="btn btn-primary mt-3" id="save-note">Save</button>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const noteContent = document.getElementById('note-content');
+const timestamp = document.getElementById('timestamp');
+const fileInput = document.getElementById('file-input');
+
+// Save function
+document.getElementById('save-note').addEventListener('click', function() {
+    fetch('{% url "notes:note_view" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ content: noteContent.value })
+    })
+    .then(response => response.json())
+    .then(data => {
+        timestamp.dataset.timestamp = data.last_modified;
+        updateTimestamp();
+    });
+});
+// Open file function
+document.getElementById('open-file').addEventListener('click', function() {
+    fileInput.click();
+});
+
+fileInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.addEventListener('load', function() {
+            noteContent.value = this.result;
+        });
+        reader.readAsText(file);
+    }
+});
+
+// Download function
+document.getElementById('download-note').addEventListener('click', function() {
+    const blob = new Blob([noteContent.value], {type: "text/plain;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'note.txt';
+    link.click();
+});
+
+// Copy to clipboard function
+document.getElementById('copy-note').addEventListener('click', function() {
+    noteContent.select();
+    document.execCommand('copy');
+});
+
+// Update timestamp
+function updateTimestamp() {
+    const now = Math.floor(new Date().getTime() / 1000);
+    const saved = parseInt(timestamp.dataset.timestamp, 10);
+    const difference = now - saved;
+    const secondsInMinute = 60;
+    const secondsInHour = 60 * 60;
+    const secondsInDay = 24 * 60 * 60;
+    let timeAgo;
+    if (difference < secondsInMinute) {
+        timeAgo = difference + ' seconds';
+    } else if (difference < secondsInHour) {
+        timeAgo = Math.floor(difference / secondsInMinute) + ' minutes';
+    } else if (difference < secondsInDay) {
+        timeAgo = Math.floor(difference / secondsInHour) + ' hours';
+    } else {
+        timeAgo = Math.floor(difference / secondsInDay) + ' days';
+    }
+    timestamp.textContent = timeAgo + ' ago';
+}
+
+setInterval(updateTimestamp, 1000 * 60);  // update timestamp every minute
+
+</script>
+{% endblock %}

@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "phonenumber_field",
     "bootstrap_datepicker_plus",
-    "week"
+    "week",
+    "notes"
 ]
 
 MIDDLEWARE = [
