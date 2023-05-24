@@ -4,13 +4,15 @@
 {% block content %}
     <h1>Client List</h1>
     <a href="{% url 'clients:client_create' %}" class="btn btn-primary mb-3">Add Client</a>
+    <a href="{% url 'clients:client_export' %}" class="btn btn-primary mb-3">Export Clients</a>
+
     <table class="table table-striped mt-3 mb-5">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Location</th>
-                <th>Date Joined</th>  <!-- Add this line -->
-                <th>Contact</th>  <!-- Add this line -->
+                <th>Date Joined</th>
+                <th>Contact</th>
                 <th>Number of Employees</th>
                 <th>Actions</th>
             </tr>
@@ -22,8 +24,8 @@
                     <td>{{ client.location }}</td>
                     <td>{{ client.date_joined|date:"F j, Y" }}</td>
                     <td>
-                        <p>Email: {{ client.email }}</p>  <!-- Add this line -->
-                        <p>Phone: {{ client.phonenumber }}</p>  <!-- Add this line -->
+                        <p>Email: {{ client.email }}</p>
+                        <p>Phone: {{ client.phonenumber }}</p>
                     </td>
                     {% with client.pk as client_pk %}
                         <td>{{ client_employee_count|get_item:client_pk }}</td>

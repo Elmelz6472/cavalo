@@ -1,11 +1,20 @@
 from django.db.models import Sum, F
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
 from .models import Client
 from .forms import ClientForm
 from employees.models import Employee
 from week.models import EmployeeWeekWork, Week
+from .resources import ClientResource
 from itertools import groupby
 from operator import itemgetter
+
+def client_export(request):
+    client_resources = ClientResource()
+    dataset = client_resources.export()
+    response = HttpResponse(dataset.csv, content_type='text/csv')
+    response['Content-disposition'] = 'attachment; filename="client_list.csv"'
+    return response
 
 
 def client_view(request, pk):
