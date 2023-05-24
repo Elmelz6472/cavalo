@@ -1,0 +1,74 @@
+{% extends 'clients/base.html' %}
+{% block title %}Client Detail{% endblock %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="text-center">{{ client.name }}</h1>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"><strong>Location:</strong> {{ client.location }}</h5>
+                <p class="card-text"><strong>Email:</strong> {{ client.email }}</p>
+                <p class="card-text"><strong>Phone:</strong> {{ client.phonenumber }}</p>
+                <p class="card-title"><strong>Total Pay for the period:</strong> {{ total_pay_global }}$</p>
+                <p class="card-text"><strong>Date Joined:</strong> {{ client.date_joined|date:"F j, Y" }}</p>
+                <div class="text-center mt-4">
+                    <a href="{% url 'clients:client_list' %}" class="btn btn-secondary">Back to Client List</a>
+                    <a href="{% url 'clients:client_edit' client.pk %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'clients:client_list' %}" onclick="confirmDelete({{ client.pk }})" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <!-- Canvas element where Chart.js will render the chart -->
+        <canvas id="workChart"></canvas>
+
+        <!-- Add Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <!-- Initialize chart -->
+        <script>
+        window.onload = function() {
+        var ctx = document.getElementById('workChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [{% for data in work_data %}'{{ data.week__start_date|date:"F j, Y" }}',{% endfor %}], // weeks
+                datasets: [{
+                    label: 'Weekly payments to employees',
+                    data: [{% for data in work_data %} '{{ data.total_pay }}',{% endfor %}], // payments
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Particular Week'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Total Payments to Employees'
+                        }
+                    }
+                }
+            }
+        });
+        }
+        </script>
+    </div>
+<script>
+  function confirmDelete(clientId) {
+    if (confirm("Are you sure you want to delete this client?")) {
+      window.location.href = "{% url 'clients:client_delete' 0 %}".replace('0', clientId);
+    }
+  }
+</script>
+{% endblock %}

@@ -1,12 +1,23 @@
+from django.db.models import Sum, F
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Client
 from .forms import ClientForm
 from employees.models import Employee
+from week.models import EmployeeWeekWork, Week
 
 
 def client_view(request, pk):
     client = get_object_or_404(Client, pk=pk)
-    return render(request, 'clients/client_detail.html', {'client': client})
+    weeks = Week.objects.filter(client=client)
+    work_data = EmployeeWeekWork.objects.filter(week__in=weeks).annotate(
+        total_pay=(
+            Sum(F('monday') + F('tuesday') + F('wednesday') + F('thursday') + F('friday') + F('saturday') + F('sunday')) * F('employee__hourly_salary')
+        )
+    ).values('week__start_date', 'total_pay').order_by('week__start_date')
+
+    total_pay_global = work_data.aggregate(total=Sum('total_pay'))['total']
+
+    return render(request, 'clients/client_view.html', {'client': client, 'work_data': work_data, 'total_pay_global': total_pay_global})
 
 
 

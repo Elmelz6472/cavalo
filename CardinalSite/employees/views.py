@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Employee
 from .forms import EmployeeForm
+from week.models import EmployeeWeekWork
 
 def employee_list(request):
     employees = Employee.objects.all()
@@ -25,3 +26,12 @@ def employee_delete(request, pk):
     employee = Employee.objects.get(pk=pk)
     employee.delete()
     return redirect('employees:employee_list')
+
+
+def employee_view(request, pk):
+    employee = get_object_or_404(Employee, pk=pk)
+    work_data = EmployeeWeekWork.objects.filter(employee=employee).order_by('week__start_date')
+    return render(request, 'employees/employee_view.html', {
+        'employee': employee,
+        'work_data': work_data
+    })

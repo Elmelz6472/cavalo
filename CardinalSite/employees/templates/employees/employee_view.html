@@ -1,0 +1,61 @@
+{% extends 'employees/base.html' %}
+{% block title %}Employee Detail{% endblock %}
+{% block content %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="container mt-5">
+        <div class="card">
+             <div class="card-header {% if employee.is_driver %}bg-success{% else %}bg-primary{% endif %}">
+                <h1 class="text-center">{{ employee.first_name }} {{ employee.last_name }}</h1>
+            </div>
+            <div class="card-body">
+                <p class="card-text"><strong>Hourly Salary:</strong> {{ employee.hourly_salary }}</p>
+                <p class="card-text"><strong>Work Location:</strong> {{ employee.work_location }}</p>
+                <p class="card-text"><strong>Date Joined:</strong> {{ employee.date_joined|date:"F j, Y" }}</p>
+                <div class="text-center mt-4">
+                    <a href="{% url 'employees:employee_update' employee.pk %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'employees:employee_list' %}" class="btn btn-secondary">Back to Employee List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Canvas element where Chart.js will render the chart -->
+    <canvas id="workChart"></canvas>
+
+<script>
+window.onload = function() {
+  var ctx = document.getElementById('workChart').getContext('2d');
+  var chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels: [{% for data in work_data %}'{{ data.week.start_date|date:"F j, Y" }}',{% endfor %}], // weeks
+          datasets: [{
+              label: 'Weekly earnings',
+              data: [{% for data in work_data %}'{{ data.total_pay }}',{% endfor %}], // earnings
+              fill: false,
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0.1
+          }]
+      },
+       options: {
+          scales: {
+              x: {
+                  title: {
+                      display: true,
+                      text: 'Particular Week'
+                  }
+              },
+              y: {
+                  title: {
+                      display: true,
+                      text: 'Earnings'
+                  }
+              }
+          }
+      }
+  });
+}
+</script>
+
+
+{% endblock %}
