@@ -6,7 +6,7 @@
     <a href="{% url 'clients:client_create' %}" class="btn btn-primary mb-3">Add Client</a>
     <a href="{% url 'clients:client_export' %}" class="btn btn-primary mb-3">Export Clients</a>
 
-    <table class="table table-striped mt-3 mb-5">
+    <table id="clientTable" class="table table-striped mt-3 mb-5">
         <thead>
             <tr>
                 <th>Name</th>
@@ -48,7 +48,24 @@
     </table>
 {% endblock %}
 {% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
 <script>
+
+        $(document).ready(function() {
+        $('#clientTable').DataTable({
+            "language": {
+                "emptyTable": "No clients found"
+            },
+            "pagingType": "full_numbers",
+            "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+            "order": []
+        });
+    });
+
+
   function confirmDelete(clientId) {
     if (confirm("Are you sure you want to delete this client?")) {
       window.location.href = "{% url 'clients:client_delete' 0 %}".replace('0', clientId);

@@ -4,7 +4,7 @@
     <h1>Employee List</h1>
     <a href="{% url 'employees:employee_create' %}" class="btn btn-primary mb-3">Add Employee</a>
     <a href="{% url 'employees:employee_export' %}" class="btn btn-primary mb-3">Export Employees</a>
-    <table class="table table-striped mt-3 mb-5">
+    <table id="employeeTable" class="table table-striped mt-3 mb-5">
         <thead>
             <tr>
                 <th>Name</th>
@@ -38,7 +38,23 @@
     </table>
 {% endblock %}
 {% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
 <script>
+
+    $(document).ready(function() {
+        $('#employeeTable').DataTable({
+            "language": {
+                "emptyTable": "No employees found"
+            },
+            "pagingType": "full_numbers",
+            "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+            "order": []
+        });
+    });
+
   function confirmDelete(employeeId) {
     if (confirm("Are you sure you want to delete this employee?")) {
       window.location.href = "{% url 'employees:employee_delete' 0 %}".replace('0', employeeId);

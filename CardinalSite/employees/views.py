@@ -41,7 +41,9 @@ def employee_delete(request, pk):
 def employee_view(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
     work_data = EmployeeWeekWork.objects.filter(employee=employee).order_by('week__start_date')
+    total_revenue = sum((work.total_pay() or 0) for work in work_data)
     return render(request, 'employees/employee_view.html', {
         'employee': employee,
-        'work_data': work_data
+        'work_data': work_data,
+        'total_revenue': total_revenue
     })
