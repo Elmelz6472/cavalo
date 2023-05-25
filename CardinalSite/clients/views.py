@@ -8,18 +8,23 @@ from week.models import EmployeeWeekWork, Week
 from .resources import ClientResource
 from itertools import groupby
 from operator import itemgetter
+from datetime import datetime
+
+
 
 def client_export(request):
     client_resources = ClientResource()
     dataset = client_resources.export()
     response = HttpResponse(dataset.csv, content_type='text/csv')
-    response['Content-disposition'] = 'attachment; filename="client_list.csv"'
+    now = datetime.now()
+    filename = 'client_list_{}_{}.csv'.format(now.strftime("%d"), now.strftime("%B"))
+    response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
     return response
-
 
 def client_view(request, pk):
     client = get_object_or_404(Client, pk=pk)
     employees = Employee.objects.filter(work_location=client)
+    employee_count = employees.count()
     weeks = Week.objects.filter(client=client)
     work_data = EmployeeWeekWork.objects.filter(week__in=weeks).annotate(
         total_pay=(
@@ -56,9 +61,8 @@ def client_view(request, pk):
             difference = invoice['weekly_invoice'] - work['total_pay']
             diff_data.append({'week__start_date': work['week__start_date'], 'difference': difference})
 
-
     return render(request, 'clients/client_view.html', {'client': client, 'work_data': grouped_work_data, 'total_pay_global': total_pay_global, 'invoice_data': grouped_invoice_data, 'employees': employees,
-    'total_invoice': total_invoice, 'diff_data': diff_data})
+    'total_invoice': total_invoice, 'diff_data': diff_data, 'employee_count': employee_count})
 
 
 
