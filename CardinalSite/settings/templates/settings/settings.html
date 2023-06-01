@@ -1,0 +1,72 @@
+{% extends 'settings/base.html' %}
+
+{% block content %}
+<div class="container">
+  <h2>Settings</h2>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header">Export Data</div>
+        <div class="card-body">
+          <p>Click the button below to export the data:</p>
+          <form action="{% url 'settings:export_data' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Export Data</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header">Import Data</div>
+        <div class="card-body">
+          <p>Select a SQLite database file to import:</p>
+          <form action="{% url 'settings:import_data' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+              <input type="file" name="file" class="form-control-file">
+            </div>
+            <button type="submit" class="btn btn-primary">Import Data</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="card mb-4">
+        <div class="card-header">Delete Database</div>
+        <div class="card-body">
+          <p><strong>Warning:</strong> This action will permanently delete the entire database. This operation cannot be undone. Please proceed with caution.</p>
+          <form id="deleteForm" action="{% url 'settings:delete_database' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete Database</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.getElementById('deleteForm').addEventListener('submit', function(event) {
+    var confirmed = confirm('Are you sure you want to delete the entire database? This action cannot be undone.');
+    if (!confirmed) {
+      event.preventDefault();
+    } else {
+      // Add a hidden input field with the confirmation value
+      var confirmInput = document.createElement('input');
+      confirmInput.type = 'hidden';
+      confirmInput.name = 'confirm';
+      confirmInput.value = 'confirmed';
+      document.getElementById('deleteForm').appendChild(confirmInput);
+    }
+  });
+</script>
+
+
+{% endblock %}

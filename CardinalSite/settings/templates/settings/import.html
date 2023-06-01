@@ -1,0 +1,10 @@
+{% extends 'settings/base.html' %}
+
+{% block content %}
+<h2>Import Data</h2>
+<form action="{% url 'settings:import_data' %}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="file" name="file">
+  <button type="submit" class="btn btn-primary">Import Data</button>
+</form>
+{% endblock %}

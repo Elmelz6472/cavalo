@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "notes",
     "import_export",
     'easy_pdf',
+    'settings'
 
 ]
 
