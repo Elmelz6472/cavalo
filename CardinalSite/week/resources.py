@@ -9,7 +9,7 @@ class EmployeeWeekWorkResource(resources.ModelResource):
         model = EmployeeWeekWork
         fields = ('week__client__name', 'employee__first_name', 'employee__last_name',
                   'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'bonus')
-        export_order = ('employee__first_name', 'employee__last_name', 'week__client__name', 'total_hours', 'total_pay','bonus', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
+        export_order = ('employee__first_name', 'employee__last_name', 'week__client__name', 'total_hours', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
 
     def dehydrate_total_hours(self, employee_week_work):
         return employee_week_work.total_hours()
