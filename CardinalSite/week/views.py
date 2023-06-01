@@ -8,6 +8,8 @@ from django.template.loader import get_template
 from django.http import HttpResponse
 from .resources import EmployeeWeekWorkResource
 from django.contrib.auth.decorators import login_required
+import calendar
+
 
 @login_required
 def week_export(request, pk):
@@ -15,9 +17,13 @@ def week_export(request, pk):
     employee_week_works = EmployeeWeekWork.objects.filter(week=week)
     employee_week_work_resource = EmployeeWeekWorkResource()
     dataset = employee_week_work_resource.export(employee_week_works)
+    start_month = calendar.month_name[week.start_date.month]
+    end_month = calendar.month_name[week.end_date.month]
+    filename = f"{start_month}_{week.start_date.day}_to_{end_month}_{week.end_date.day}_work_schedule.csv"
     response = HttpResponse(dataset.csv, content_type='text/csv')
-    response['Content-Disposition'] = f'attachment; filename="{week.start_date}_to_{week.end_date}_work_schedule.csv"'
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
+
 
 @login_required
 def week_list(request):

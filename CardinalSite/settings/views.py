@@ -27,8 +27,6 @@ def export_data(request):
             response['Content-Disposition'] = f'attachment; filename="{filename}"'
             return response
     else:
-        # Handle the case when the database file does not exist
-        # You can redirect the user to an error page or show an appropriate message
         return HttpResponse('Database file does not exist.')
 
 @login_required
@@ -36,7 +34,6 @@ def import_data(request):
     if request.method == 'POST' and request.FILES.get('file'):
         file = request.FILES['file']
         if file.name.endswith('.sqlite3'):
-            # Save the uploaded file as db.sqlite3 to replace the existing database
             database_path = django_settings.DATABASES['default']['NAME']
             with open(database_path, 'wb') as f:
                 for chunk in file.chunks():
