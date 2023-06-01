@@ -9,9 +9,10 @@ from .resources import ClientResource
 from itertools import groupby
 from operator import itemgetter
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
 
 
-
+@login_required
 def client_export(request):
     client_resources = ClientResource()
     dataset = client_resources.export()
@@ -21,6 +22,7 @@ def client_export(request):
     response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
     return response
 
+@login_required
 def client_view(request, pk):
     client = get_object_or_404(Client, pk=pk)
     employees = Employee.objects.filter(work_location=client)
@@ -65,17 +67,18 @@ def client_view(request, pk):
     'total_invoice': total_invoice, 'diff_data': diff_data, 'employee_count': employee_count})
 
 
-
+@login_required
 def client_list(request):
     clients = Client.objects.all()
     client_employee_count = {}
+    total_clients = clients.count()
 
     for client in clients:
         employee_count = Employee.objects.filter(work_location=client).count()
         client_employee_count[client.pk] = employee_count
-    return render(request, 'clients/client_list.html', {'clients': clients, 'client_employee_count': client_employee_count})
+    return render(request, 'clients/client_list.html', {'clients': clients, 'client_employee_count': client_employee_count, 'total_clients':total_clients})
 
-
+@login_required
 def client_create(request):
     form = ClientForm(request.POST or None)
     if form.is_valid():
@@ -83,6 +86,7 @@ def client_create(request):
         return redirect('clients:client_list')
     return render(request, 'clients/client_form.html', {'form': form})
 
+@login_required
 def client_edit(request, pk):
     client = get_object_or_404(Client, pk=pk)
     form = ClientForm(request.POST or None, instance=client)
@@ -91,6 +95,7 @@ def client_edit(request, pk):
         return redirect('clients:client_list')
     return render(request, 'clients/client_form.html', {'form': form})
 
+@login_required
 def client_delete(request, pk):
     client = get_object_or_404(Client, pk=pk)
     client.delete()

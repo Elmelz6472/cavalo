@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -64,7 +66,16 @@ ROOT_URLCONF = "CardinalSite.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            os.path.join(BASE_DIR, 'CardinalSite', 'templates'),  # Root folder templates
+            os.path.join(BASE_DIR, 'clients', 'templates'),
+            os.path.join(BASE_DIR, 'employees', 'templates'),
+            os.path.join(BASE_DIR, 'week', 'templates'),
+            os.path.join(BASE_DIR, 'notes', 'templates'),
+
+
+            # Add more paths for other apps' templates
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

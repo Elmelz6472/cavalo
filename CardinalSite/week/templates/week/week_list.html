@@ -1,8 +1,23 @@
 {% extends 'week/base.html' %}
 {% block title %}Week List{% endblock %}
 {% block content %}
-    <h1>Week List</h1>
-    <a href="{% url 'week:week_create' %}" class="btn btn-primary mb-3">Add Week</a>
+<div class="card mb-4">
+    <div class="card-header">
+        <h1 class="mb-0">Week List</h1>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <p class="mb-0">Total number of weeks: <strong>{{ total_weeks }}</strong></p>
+            </div>
+            <div class="col-md-6 text-md-right">
+                <a href="{% url 'week:week_create' %}" class="btn btn-primary">Add Week</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     <table id="weekTable" class="table table-striped mt-3 mb-5">
         <thead>
             <tr>

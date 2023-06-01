@@ -1,9 +1,24 @@
 {% extends 'employees/base.html' %}
 {% block title %}Employee List{% endblock %}
 {% block content %}
-    <h1>Employee List</h1>
-    <a href="{% url 'employees:employee_create' %}" class="btn btn-primary mb-3">Add Employee</a>
-    <a href="{% url 'employees:employee_export' %}" class="btn btn-primary mb-3">Export Employees</a>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h1 class="mb-0">Employee List</h1>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <p class="mb-0">Total number of employees: <strong>{{ total_employees }}</strong></p>
+            </div>
+            <div class="col-md-6 text-md-right">
+                <a href="{% url 'employees:employee_create' %}" class="btn btn-primary">Add Employee</a>
+                <a href="{% url 'employees:employee_export' %}" class="btn btn-primary ml-2">Export Employees</a>
+            </div>
+        </div>
+    </div>
+</div>
+
     <table id="employeeTable" class="table table-striped mt-3 mb-5">
         <thead>
             <tr>

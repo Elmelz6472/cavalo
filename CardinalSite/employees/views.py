@@ -5,8 +5,10 @@ from week.models import EmployeeWeekWork
 from django.http import HttpResponse
 from .resources import EmployeeResource
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def employee_export(request):
     employee_resource = EmployeeResource()
     dataset = employee_resource.export()
@@ -16,11 +18,13 @@ def employee_export(request):
     response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
     return response
 
-
+@login_required
 def employee_list(request):
     employees = Employee.objects.all()
-    return render(request, 'employees/employee_list.html', {'employees': employees})
+    total_employees = employees.count()
+    return render(request, 'employees/employee_list.html', {'employees': employees, 'total_employees': total_employees})
 
+@login_required
 def employee_create(request):
     form = EmployeeForm(request.POST or None)
     if form.is_valid():
@@ -28,6 +32,7 @@ def employee_create(request):
         return redirect('employees:employee_list')
     return render(request, 'employees/employee_form.html', {'form': form})
 
+@login_required
 def employee_update(request, pk):
     employee = Employee.objects.get(pk=pk)
     form = EmployeeForm(request.POST or None, instance=employee)
@@ -36,12 +41,13 @@ def employee_update(request, pk):
         return redirect('employees:employee_list')
     return render(request, 'employees/employee_form.html', {'form': form})
 
+@login_required
 def employee_delete(request, pk):
     employee = Employee.objects.get(pk=pk)
     employee.delete()
     return redirect('employees:employee_list')
 
-
+@login_required
 def employee_view(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
     work_data = EmployeeWeekWork.objects.filter(employee=employee).order_by('week__start_date')

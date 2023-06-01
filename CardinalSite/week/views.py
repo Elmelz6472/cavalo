@@ -7,8 +7,9 @@ from django.http import JsonResponse
 from django.template.loader import get_template
 from django.http import HttpResponse
 from .resources import EmployeeWeekWorkResource
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def week_export(request, pk):
     week = get_object_or_404(Week, pk=pk)
     employee_week_works = EmployeeWeekWork.objects.filter(week=week)
@@ -18,11 +19,14 @@ def week_export(request, pk):
     response['Content-Disposition'] = f'attachment; filename="{week.start_date}_to_{week.end_date}_work_schedule.csv"'
     return response
 
-
+@login_required
 def week_list(request):
     weeks = Week.objects.all()
-    return render(request, 'week/week_list.html', {'weeks': weeks})
+    total_weeks = weeks.count()
+    return render(request, 'week/week_list.html', {'weeks': weeks, 'total_weeks': total_weeks})
 
+
+@login_required
 def week_create(request):
     form = WeekForm(request.POST or None)
     if form.is_valid():
@@ -32,6 +36,7 @@ def week_create(request):
         return redirect('week:week_list')
     return render(request, 'week/week_form.html', {'form': form})
 
+@login_required
 def week_edit(request, pk):
     week = get_object_or_404(Week, pk=pk)
     if request.method == "POST":
@@ -45,7 +50,7 @@ def week_edit(request, pk):
         form = WeekForm(instance=week)
     return render(request, 'week/week_form.html', {'form': form})
 
-
+@login_required
 def week_view(request, pk):
     week = get_object_or_404(Week, pk=pk)
     client = week.client
@@ -53,12 +58,13 @@ def week_view(request, pk):
     employee_works = {work.employee_id: work for work in EmployeeWeekWork.objects.filter(week=week, employee__in=employees)}
     return render(request, 'week/week_detail.html', {'week': week, 'employees': employees, 'employee_works': employee_works})
 
-
+@login_required
 def week_delete(request, pk):
     week = get_object_or_404(Week, pk=pk)
     week.delete()
     return redirect('week:week_list')
 
+@login_required
 def week_work_edit(request, week_pk, employee_pk):
     week = get_object_or_404(Week, pk=week_pk)
     employee = get_object_or_404(Employee, pk=employee_pk)
@@ -70,5 +76,5 @@ def week_work_edit(request, week_pk, employee_pk):
         return redirect('week:week_view', pk=week.pk)
 
 
-    return render(request, 'week/week_work_form.html', {'form': form})
+    return render(request, 'week/week_work_form.html', {'form': form, 'employee':employee, 'week':week})
 
