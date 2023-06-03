@@ -14,4 +14,5 @@ urlpatterns = [
     path('settings/', include('settings.urls', namespace='settings')),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='clients:client_list'), name='logout'),
+    path('changelog/', include('changelog.urls', namespace='changelog')),
 ]

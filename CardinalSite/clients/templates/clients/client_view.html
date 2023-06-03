@@ -1,5 +1,7 @@
 {% extends 'clients/base.html' %}
 {% load custom_filters %}
+
+
 {% block title %}Client Detail{% endblock %}
 {% block content %}
 
@@ -32,11 +34,11 @@
                 <div class="col-sm-6">
                     <div class="mb-2">
                         <h5 class="card-title text-primary"><strong>Total Invoices Since the Beginning:</strong></h5>
-                        <p class="card-text pl-2">{{ total_invoice }}$</p>
+                        <p class="card-text pl-2">{{ total_invoice|format_number_with_commas }}$</p>
                     </div>
                     <div class="mb-2">
                         <h5 class="card-title text-primary"><strong>Total Pay (without bonuses):</strong></h5>
-                        <p class="card-text pl-2">{{ total_pay_global }}$</p>
+                        <p class="card-text pl-2">{{ total_pay_global|format_number_with_commas }}$</p>
                     </div>
                     <div class="mb-2">
                         <h5 class="card-title text-primary"><strong>Total Employees:</strong></h5>

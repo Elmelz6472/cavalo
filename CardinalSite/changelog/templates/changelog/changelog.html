@@ -1,0 +1,31 @@
+{% extends 'changelog/base.html' %}
+{% load changelog_tags %}
+
+
+{% block content %}
+<style>
+    /* CSS to make the textarea fullscreen */
+    textarea.fullscreen {
+        position: fixed;
+        top: 56px; /* Adjust this value based on your navbar's height */
+        left: 0;
+        width: 100%;
+        height: calc(100% - 56px); /* Subtract navbar's height from viewport height */
+        resize: none;
+        border: none;
+        background-color: white;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+</style>
+
+<h1>Changelog</h1>
+<textarea class="fullscreen" readonly>
+{% for entry in changelogs %}
+{{ entry.timestamp|localtime }}
+{{ entry.message }}
+{% endfor %}
+</textarea>
+{% endblock %}
