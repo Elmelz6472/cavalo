@@ -5,36 +5,55 @@
 {% block title %}Finance Summary{% endblock %}
 
 {% block content %}
+
 <div class="container mt-5">
     <div class="card border-primary mb-3 shadow">
         <div class="card-header bg-primary text-white text-center">
             <h2 class="mb-0">Finance Summary</h2>
         </div>
         <div class="card-body">
-            <div class="mb-2">
-                <h5 class="card-title text-primary"><strong>Total Profit:</strong></h5>
-                <p class="card-text pl-2">{{ total_profit|format_number_with_commas }}$</p>
-            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Total Profit:</strong></h5>
+                        <p class="card-text pl-2">{{ total_profit|format_number_with_commas }}$</p>
+                    </div>
 
-            <div class="mb-2">
-                <h5 class="card-title text-primary"><strong>Total Employee:</strong></h5>
-                <p class="card-text pl-2">{{ employees }}</p>
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Total Employee:</strong></h5>
+                        <p class="card-text pl-2">{{ employees }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Total Pay (to employee):</strong></h5>
+                        <p class="card-text pl-2">{{ total_pay_global|format_number_with_commas }}$</p>
+                    </div>
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Total Invoice Global:</strong></h5>
+                        <p class="card-text pl-2">{{ total_invoice_global|format_number_with_commas }}$</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+
 
 <div class="container mt-5">
     <canvas id="profitChart"></canvas>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
     window.onload = function() {
         var ctx = document.getElementById('profitChart').getContext('2d');
 
-        // Extract the profit values
+        // Extract the profit and pay to employee values
         var profits = [{% for profit in total_profits %}{{ profit.total_profit }},{% endfor %}];
+        var payToEmployees = [{% for profit in total_profits %}{{ profit.pay_to_employee }},{% endfor %}];
 
         // Calculate the median profit value
         var sortedProfits = profits.slice().sort(function(a, b) {
@@ -44,10 +63,23 @@
         var median = sortedProfits.length % 2 === 0 ? (sortedProfits[middleIndex - 1] + sortedProfits[middleIndex]) / 2 : sortedProfits[middleIndex];
 
         // Calculate the average profit value
-        var sum = profits.reduce(function(a, b) {
+        var sumProfits = profits.reduce(function(a, b) {
             return a + b;
         }, 0);
-        var average = sum / profits.length;
+        var averageProfit = sumProfits / profits.length;
+
+        // Calculate the median pay to employee value
+        var sortedPayToEmployees = payToEmployees.slice().sort(function(a, b) {
+            return a - b;
+        });
+        var middleIndexPay = Math.floor(sortedPayToEmployees.length / 2);
+        var medianPay = sortedPayToEmployees.length % 2 === 0 ? (sortedPayToEmployees[middleIndexPay - 1] + sortedPayToEmployees[middleIndexPay]) / 2 : sortedPayToEmployees[middleIndexPay];
+
+        // Calculate the average pay to employee value
+        var sumPayToEmployees = payToEmployees.reduce(function(a, b) {
+            return a + b;
+        }, 0);
+        var averagePay = sumPayToEmployees / payToEmployees.length;
 
         var chart = new Chart(ctx, {
             type: 'bar',
@@ -62,22 +94,52 @@
                         borderWidth: 1
                     },
                     {
+                        label: 'Pay to Employees',
+                        data: payToEmployees, // Pay to employees values
+                        backgroundColor: 'rgba(192, 75, 75, 0.2)',
+                        borderColor: 'rgba(192, 75, 75, 1)',
+                        borderWidth: 1,
+                        hidden: true
+                    },
+                    {
                         type: 'line',
-                        label: 'Median',
+                        label: 'Median Profit',
                         data: Array(profits.length).fill(median),
                         borderColor: 'red',
                         borderWidth: 2,
                         borderDash: [5, 5],
-                        fill: false
+                        fill: false,
+                        hidden: true // Hide the Median Profit legend by default
                     },
                     {
                         type: 'line',
-                        label: 'Average',
-                        data: Array(profits.length).fill(average),
+                        label: 'Average Profit',
+                        data: Array(profits.length).fill(averageProfit),
                         borderColor: 'blue',
                         borderWidth: 2,
                         borderDash: [5, 5],
-                        fill: false
+                        fill: false,
+                        hidden: true // Hide the Average Profit legend by default
+                    },
+                    {
+                        type: 'line',
+                        label: 'Median Pay to Employees',
+                        data: Array(payToEmployees.length).fill(medianPay),
+                        borderColor: 'orange',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: false,
+                        hidden: true // Hide the Median Pay to Employees legend by default
+                    },
+                    {
+                        type: 'line',
+                        label: 'Average Pay to Employees',
+                        data: Array(payToEmployees.length).fill(averagePay),
+                        borderColor: 'purple',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: false,
+                        hidden: true // Hide the Average Pay to Employees legend by default
                     }
                 ]
             },
@@ -87,13 +149,13 @@
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Total Profit ($)'
+                            text: 'Amount ($)'
                         }
                     },
                     x: {
                         title: {
                             display: true,
-                            text: 'Company'
+                            text: 'Clients'
                         }
                     }
                 },
@@ -109,8 +171,14 @@
                 }
             }
         });
+
+        // Show the Total Profit legend
+        chart.getDatasetMeta(0).hidden = false;
+        chart.update();
     };
 </script>
+
+
 
 
 {% endblock %}
