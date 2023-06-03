@@ -1,0 +1,116 @@
+{% extends 'finance/base.html' %}
+{% load custom_filters %}
+
+
+{% block title %}Finance Summary{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card border-primary mb-3 shadow">
+        <div class="card-header bg-primary text-white text-center">
+            <h2 class="mb-0">Finance Summary</h2>
+        </div>
+        <div class="card-body">
+            <div class="mb-2">
+                <h5 class="card-title text-primary"><strong>Total Profit:</strong></h5>
+                <p class="card-text pl-2">{{ total_profit|format_number_with_commas }}$</p>
+            </div>
+
+            <div class="mb-2">
+                <h5 class="card-title text-primary"><strong>Total Employee:</strong></h5>
+                <p class="card-text pl-2">{{ employees }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <canvas id="profitChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    window.onload = function() {
+        var ctx = document.getElementById('profitChart').getContext('2d');
+
+        // Extract the profit values
+        var profits = [{% for profit in total_profits %}{{ profit.total_profit }},{% endfor %}];
+
+        // Calculate the median profit value
+        var sortedProfits = profits.slice().sort(function(a, b) {
+            return a - b;
+        });
+        var middleIndex = Math.floor(sortedProfits.length / 2);
+        var median = sortedProfits.length % 2 === 0 ? (sortedProfits[middleIndex - 1] + sortedProfits[middleIndex]) / 2 : sortedProfits[middleIndex];
+
+        // Calculate the average profit value
+        var sum = profits.reduce(function(a, b) {
+            return a + b;
+        }, 0);
+        var average = sum / profits.length;
+
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for profit in total_profits %}'{{ profit.client.name }}',{% endfor %}], // Company names
+                datasets: [
+                    {
+                        label: 'Total Profit',
+                        data: profits, // Total profit values
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        type: 'line',
+                        label: 'Median',
+                        data: Array(profits.length).fill(median),
+                        borderColor: 'red',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: false
+                    },
+                    {
+                        type: 'line',
+                        label: 'Average',
+                        data: Array(profits.length).fill(average),
+                        borderColor: 'blue',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Total Profit ($)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Company'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        onClick: (event, legendItem, legend) => {
+                            var datasetIndex = legendItem.datasetIndex;
+                            var meta = chart.getDatasetMeta(datasetIndex);
+                            meta.hidden = meta.hidden === null ? !meta.hidden : null;
+                            chart.update();
+                        }
+                    }
+                }
+            }
+        });
+    };
+</script>
+
+
+{% endblock %}

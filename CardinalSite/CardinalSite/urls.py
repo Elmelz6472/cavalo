@@ -10,6 +10,7 @@ urlpatterns = [
     path('employees/', include('employees.urls', namespace='employees')),
     path('week/', include('week.urls', namespace='week')),
     path('notes/', include('notes.urls', namespace='notes')),
+    path('finance/', include('finance.urls', namespace='finance')),
     path('settings/', include('settings.urls', namespace='settings')),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='clients:client_list'), name='logout'),

@@ -48,7 +48,9 @@ INSTALLED_APPS = [
     "notes",
     "import_export",
     'easy_pdf',
-    'settings'
+    'settings',
+    'finance'
+
 
 ]
 
@@ -73,6 +75,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'employees', 'templates'),
             os.path.join(BASE_DIR, 'week', 'templates'),
             os.path.join(BASE_DIR, 'notes', 'templates'),
+            os.path.join(BASE_DIR, 'finance', 'templates')
 
 
             # Add more paths for other apps' templates
