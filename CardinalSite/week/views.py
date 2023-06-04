@@ -28,8 +28,9 @@ def week_export(request, pk):
 @login_required
 def week_list(request):
     weeks = Week.objects.all()
+    unique_start_dates = weeks.values('start_date').distinct().count()
     total_weeks = weeks.count()
-    return render(request, 'week/week_list.html', {'weeks': weeks, 'total_weeks': total_weeks})
+    return render(request, 'week/week_list.html', {'weeks': weeks, 'total_weeks': total_weeks, 'unique_start_dates': unique_start_dates})
 
 
 @login_required

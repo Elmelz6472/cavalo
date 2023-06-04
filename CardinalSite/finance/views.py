@@ -15,11 +15,13 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def finance_view(request):
     clients = Client.objects.all()
+    clients_count = Client.objects.count()
     employees_count = Employee.objects.count()
     total_profits = []
     total_pay_global = 0
     total_invoice_global = 0
 
+    sum_profit_global = 0
     for client in clients:
         weeks = Week.objects.filter(client=client)
         work_data = EmployeeWeekWork.objects.filter(week__in=weeks).annotate(
@@ -71,7 +73,15 @@ def finance_view(request):
         for combo in total_profits:
             sum_profit_global += combo['total_profit']
 
+    try: average_profit_per_employee = sum_profit_global/employees_count
+    except ZeroDivisionError: average_profit_per_employee = 0
 
+    try:average_pay_per_employee = total_pay_global/employees_count
+    except ZeroDivisionError: average_pay_per_employee = 0
+
+    try: average_invoice_per_compagnie = total_invoice_global/clients_count
+    except ZeroDivisionError: average_invoice_per_compagnie = 0
 
     return render(request, 'finance/finance_view.html', {'clients': clients, 'total_profits': total_profits, 'total_profit':sum_profit_global,
-    'employees':employees_count, 'total_pay_global':total_pay_global, 'total_invoice_global':total_invoice_global})
+    'employees':employees_count, 'total_pay_global':total_pay_global, 'total_invoice_global':total_invoice_global,
+    'average_profit_per_employee': average_profit_per_employee, 'average_pay_per_employee': average_pay_per_employee, 'average_invoice_per_compagnie':average_invoice_per_compagnie})

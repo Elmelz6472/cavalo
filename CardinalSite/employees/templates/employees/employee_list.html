@@ -2,22 +2,34 @@
 {% block title %}Employee List{% endblock %}
 {% block content %}
 
-<div class="card mb-4">
-    <div class="card-header">
-        <h1 class="mb-0">Employee List</h1>
-    </div>
-    <div class="card-body">
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <p class="mb-0">Total number of employees: <strong>{{ total_employees }}</strong></p>
-            </div>
-            <div class="col-md-6 text-md-right">
+
+
+<div class="container mt-5">
+    <div class="card border-primary mb-3 shadow">
+        <div class="card-header bg-primary text-white text-center">
+            <h2 class="mb-0">Client List</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Total number of employees:</strong></h5>
+                        <p class="card-text pl-2">{{ total_employees }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-right">
                 <a href="{% url 'employees:employee_create' %}" class="btn btn-primary">Add Employee</a>
                 <a href="{% url 'employees:employee_export' %}" class="btn btn-primary ml-2">Export Employees</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
+
+
 
     <table id="employeeTable" class="table table-striped mt-3 mb-5">
         <thead>

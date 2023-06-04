@@ -6,4 +6,4 @@ class ChangelogEntry(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f'{self.timestamp}: {self.message}'
+        return f'Changelog #{self.pk}'

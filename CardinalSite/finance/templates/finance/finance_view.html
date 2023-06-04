@@ -45,6 +45,39 @@
     <canvas id="profitChart"></canvas>
 </div>
 
+
+<div class="container mt-5">
+    <div class="card border-primary mb-3 shadow">
+        <div class="card-header bg-primary text-white text-center">
+            <h2 class="mb-0">Miscellaneous Information</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Average Profit per Employee:</strong></h5>
+                        <p class="card-text pl-2">{{ average_profit_per_employee|format_number_with_commas }}$</p>
+                    </div>
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Average Pay per Employee:</strong></h5>
+                        <p class="card-text pl-2">{{ average_pay_per_employee|format_number_with_commas }}$</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                   <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Average Invoice per Company:</strong></h5>
+                        <p class="card-text pl-2">{{ average_invoice_per_compagnie|format_number_with_commas }}$</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>

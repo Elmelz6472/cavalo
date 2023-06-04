@@ -4,22 +4,36 @@
 
 {% block title %}Client List{% endblock %}
 {% block content %}
-<div class="card mb-4">
-    <div class="card-header">
-        <h1 class="mb-0">Client List</h1>
-    </div>
-    <div class="card-body">
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <p class="mb-0">Total number of clients: <strong>{{ total_clients }}</strong></p>
-            </div>
-            <div class="col-md-6 text-md-right">
+
+
+
+
+
+
+<div class="container mt-5">
+    <div class="card border-primary mb-3 shadow">
+        <div class="card-header bg-primary text-white text-center">
+            <h2 class="mb-0">Client List</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-2">
+                        <h5 class="card-title text-primary"><strong>Total number of clients:</strong></h5>
+                        <p class="card-text pl-2">{{ total_clients }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-right">
                 <a href="{% url 'clients:client_create' %}" class="btn btn-primary">Add Client</a>
                 <a href="{% url 'clients:client_export' %}" class="btn btn-primary ml-2">Export Clients</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
 
     <table id="clientTable" class="table table-striped mt-3 mb-5">
         <thead>
