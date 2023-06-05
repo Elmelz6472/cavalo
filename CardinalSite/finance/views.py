@@ -66,7 +66,8 @@ def finance_view(request):
                 ),
                 weekly_invoice=F("total_hours") * F("week__client__hourly_rate"),
             )
-            .values("week__start_date", "weekly_invoice").order_by("week__start_date")
+            .values("week__start_date", "weekly_invoice")
+            .order_by("week__start_date")
         )
 
         grouped_invoice_data = []
