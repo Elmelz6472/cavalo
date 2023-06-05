@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.db import connection
 from datetime import date
 from django.apps import apps
+from changelog.models import ChangelogEntry
 import os
 
 
@@ -58,7 +59,7 @@ def delete_database(request):
         if confirm == "confirmed":
             # Delete all tables from the database except superusers
             for model in apps.get_models():
-                if model is not User:  # Exclude the User model (superusers)
+                if model != User and model != ChangelogEntry:
                     model.objects.all().delete()
 
             messages.success(
