@@ -60,11 +60,6 @@ def finance_view(request):
                 diff_data.append({'week__start_date': work['week__start_date'], 'difference': difference})
 
 
-
-
-
-
-
         total_profit = sum(item['difference'] for item in diff_data)
         pay_to_employee = sum(item['total_pay'] for item in grouped_work_data)
 
