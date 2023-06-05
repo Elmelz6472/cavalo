@@ -47,12 +47,10 @@ INSTALLED_APPS = [
     "week",
     "notes",
     "import_export",
-    'easy_pdf',
-    'settings',
-    'finance',
-    'changelog'
-
-
+    "easy_pdf",
+    "settings",
+    "finance",
+    "changelog",
 ]
 
 MIDDLEWARE = [
@@ -71,14 +69,14 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            os.path.join(BASE_DIR, 'CardinalSite', 'templates'),  # Root folder templates
-            os.path.join(BASE_DIR, 'clients', 'templates'),
-            os.path.join(BASE_DIR, 'employees', 'templates'),
-            os.path.join(BASE_DIR, 'week', 'templates'),
-            os.path.join(BASE_DIR, 'notes', 'templates'),
-            os.path.join(BASE_DIR, 'finance', 'templates')
-
-
+            os.path.join(
+                BASE_DIR, "CardinalSite", "templates"
+            ),  # Root folder templates
+            os.path.join(BASE_DIR, "clients", "templates"),
+            os.path.join(BASE_DIR, "employees", "templates"),
+            os.path.join(BASE_DIR, "week", "templates"),
+            os.path.join(BASE_DIR, "notes", "templates"),
+            os.path.join(BASE_DIR, "finance", "templates")
             # Add more paths for other apps' templates
         ],
         "APP_DIRS": True,
@@ -131,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'America/Montreal'
+TIME_ZONE = "America/Montreal"
 
 USE_I18N = True
 

@@ -16,11 +16,12 @@ from django.contrib.auth.decorators import login_required
 def client_export(request):
     client_resources = ClientResource()
     dataset = client_resources.export()
-    response = HttpResponse(dataset.csv, content_type='text/csv')
+    response = HttpResponse(dataset.csv, content_type="text/csv")
     now = datetime.now()
-    filename = 'client_list_{}_{}.csv'.format(now.strftime("%d"), now.strftime("%B"))
-    response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
+    filename = "client_list_{}_{}.csv".format(now.strftime("%d"), now.strftime("%B"))
+    response["Content-Disposition"] = "attachment; filename={}".format(filename)
     return response
+
 
 @login_required
 def client_view(request, pk):
@@ -28,43 +29,84 @@ def client_view(request, pk):
     employees = Employee.objects.filter(work_location=client)
     employee_count = employees.count()
     weeks = Week.objects.filter(client=client)
-    work_data = EmployeeWeekWork.objects.filter(week__in=weeks).annotate(
-        total_pay=(
-            Sum(F('monday') + F('tuesday') + F('wednesday') + F('thursday') + F('friday') + F('saturday') + F('sunday')) * F('employee__hourly_salary')
+    work_data = (
+        EmployeeWeekWork.objects.filter(week__in=weeks)
+        .annotate(
+            total_pay=(
+                Sum(
+                    F("monday")
+                    + F("tuesday")
+                    + F("wednesday")
+                    + F("thursday")
+                    + F("friday")
+                    + F("saturday")
+                    + F("sunday")
+                )
+                * F("employee__hourly_salary")
+            )
         )
-    ).values('week__start_date', 'total_pay').order_by('week__start_date')
-
+        .values("week__start_date", "total_pay")
+        .order_by("week__start_date")
+    )
 
     grouped_work_data = []
-    for key, group in groupby(work_data, key=itemgetter('week__start_date')):
-        total_pay = sum(item['total_pay'] for item in group)
-        grouped_work_data.append({'week__start_date': key, 'total_pay': total_pay})
+    for key, group in groupby(work_data, key=itemgetter("week__start_date")):
+        total_pay = sum(item["total_pay"] for item in group)
+        grouped_work_data.append({"week__start_date": key, "total_pay": total_pay})
 
-    total_pay_global = sum(item['total_pay'] for item in grouped_work_data)
+    total_pay_global = sum(item["total_pay"] for item in grouped_work_data)
 
-
-    invoice_data = EmployeeWeekWork.objects.filter(week__in=weeks).annotate(
-        total_hours=(
-            Sum(F('monday') + F('tuesday') + F('wednesday') + F('thursday') + F('friday') + F('saturday') + F('sunday'))
-        ),
-        weekly_invoice=F('total_hours') * F('week__client__hourly_rate')
-    ).values('week__start_date', 'weekly_invoice').order_by('week__start_date')
+    invoice_data = (
+        EmployeeWeekWork.objects.filter(week__in=weeks)
+        .annotate(
+            total_hours=(
+                Sum(
+                    F("monday")
+                    + F("tuesday")
+                    + F("wednesday")
+                    + F("thursday")
+                    + F("friday")
+                    + F("saturday")
+                    + F("sunday")
+                )
+            ),
+            weekly_invoice=F("total_hours") * F("week__client__hourly_rate"),
+        )
+        .values("week__start_date", "weekly_invoice")
+        .order_by("week__start_date")
+    )
 
     grouped_invoice_data = []
     total_invoice = 0
-    for key, group in groupby(invoice_data, key=itemgetter('week__start_date')):
-        weekly_invoice = sum(item['weekly_invoice'] for item in group)
+    for key, group in groupby(invoice_data, key=itemgetter("week__start_date")):
+        weekly_invoice = sum(item["weekly_invoice"] for item in group)
         total_invoice += weekly_invoice
-        grouped_invoice_data.append({'week__start_date': key, 'weekly_invoice': weekly_invoice})
+        grouped_invoice_data.append(
+            {"week__start_date": key, "weekly_invoice": weekly_invoice}
+        )
 
     diff_data = []
     for work, invoice in zip(grouped_work_data, grouped_invoice_data):
-        if work['week__start_date'] == invoice['week__start_date']:
-            difference = invoice['weekly_invoice'] - work['total_pay']
-            diff_data.append({'week__start_date': work['week__start_date'], 'difference': difference})
+        if work["week__start_date"] == invoice["week__start_date"]:
+            difference = invoice["weekly_invoice"] - work["total_pay"]
+            diff_data.append(
+                {"week__start_date": work["week__start_date"], "difference": difference}
+            )
 
-    return render(request, 'clients/client_view.html', {'client': client, 'work_data': grouped_work_data, 'total_pay_global': total_pay_global, 'invoice_data': grouped_invoice_data, 'employees': employees,
-    'total_invoice': total_invoice, 'diff_data': diff_data, 'employee_count': employee_count})
+    return render(
+        request,
+        "clients/client_view.html",
+        {
+            "client": client,
+            "work_data": grouped_work_data,
+            "total_pay_global": total_pay_global,
+            "invoice_data": grouped_invoice_data,
+            "employees": employees,
+            "total_invoice": total_invoice,
+            "diff_data": diff_data,
+            "employee_count": employee_count,
+        },
+    )
 
 
 @login_required
@@ -76,15 +118,25 @@ def client_list(request):
     for client in clients:
         employee_count = Employee.objects.filter(work_location=client).count()
         client_employee_count[client.pk] = employee_count
-    return render(request, 'clients/client_list.html', {'clients': clients, 'client_employee_count': client_employee_count, 'total_clients':total_clients})
+    return render(
+        request,
+        "clients/client_list.html",
+        {
+            "clients": clients,
+            "client_employee_count": client_employee_count,
+            "total_clients": total_clients,
+        },
+    )
+
 
 @login_required
 def client_create(request):
     form = ClientForm(request.POST or None)
     if form.is_valid():
         form.save()
-        return redirect('clients:client_list')
-    return render(request, 'clients/client_form.html', {'form': form})
+        return redirect("clients:client_list")
+    return render(request, "clients/client_form.html", {"form": form})
+
 
 @login_required
 def client_edit(request, pk):
@@ -92,13 +144,12 @@ def client_edit(request, pk):
     form = ClientForm(request.POST or None, instance=client)
     if form.is_valid():
         form.save()
-        return redirect('clients:client_list')
-    return render(request, 'clients/client_form.html', {'form': form})
+        return redirect("clients:client_list")
+    return render(request, "clients/client_form.html", {"form": form})
+
 
 @login_required
 def client_delete(request, pk):
     client = get_object_or_404(Client, pk=pk)
     client.delete()
-    return redirect('clients:client_list')
-
-
+    return redirect("clients:client_list")

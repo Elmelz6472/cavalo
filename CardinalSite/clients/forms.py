@@ -1,8 +1,14 @@
 from django import forms
 from .models import Client
 
+
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
-        fields = ['name', 'phonenumber', 'email', 'location', 'hourly_rate']  # added field
-
+        fields = [
+            "name",
+            "phonenumber",
+            "email",
+            "location",
+            "hourly_rate",
+        ]  # added field

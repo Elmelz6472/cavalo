@@ -3,6 +3,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from datetime import date
 from clients.models import Client
 
+
 class Employee(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)

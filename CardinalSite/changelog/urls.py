@@ -1,8 +1,8 @@
 from django.urls import path
 from . import views
 
-app_name = 'changelog'
+app_name = "changelog"
 
 urlpatterns = [
-    path('', views.ChangelogView.as_view(), name='changelog_view'),
+    path("", views.ChangelogView.as_view(), name="changelog_view"),
 ]

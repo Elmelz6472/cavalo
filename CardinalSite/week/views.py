@@ -20,17 +20,25 @@ def week_export(request, pk):
     start_month = calendar.month_name[week.start_date.month]
     end_month = calendar.month_name[week.end_date.month]
     filename = f"{start_month}_{week.start_date.day}_to_{end_month}_{week.end_date.day}_work_schedule.csv"
-    response = HttpResponse(dataset.csv, content_type='text/csv')
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    response = HttpResponse(dataset.csv, content_type="text/csv")
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
     return response
 
 
 @login_required
 def week_list(request):
     weeks = Week.objects.all()
-    unique_start_dates = weeks.values('start_date').distinct().count()
+    unique_start_dates = weeks.values("start_date").distinct().count()
     total_weeks = weeks.count()
-    return render(request, 'week/week_list.html', {'weeks': weeks, 'total_weeks': total_weeks, 'unique_start_dates': unique_start_dates})
+    return render(
+        request,
+        "week/week_list.html",
+        {
+            "weeks": weeks,
+            "total_weeks": total_weeks,
+            "unique_start_dates": unique_start_dates,
+        },
+    )
 
 
 @login_required
@@ -40,8 +48,9 @@ def week_create(request):
         week = form.save(commit=False)
         week.end_date = week.start_date + timedelta(days=6)
         week.save()
-        return redirect('week:week_list')
-    return render(request, 'week/week_form.html', {'form': form})
+        return redirect("week:week_list")
+    return render(request, "week/week_form.html", {"form": form})
+
 
 @login_required
 def week_edit(request, pk):
@@ -52,24 +61,34 @@ def week_edit(request, pk):
             week = form.save(commit=False)
             week.end_date = week.start_date + timedelta(days=6)
             week.save()
-            return redirect('week:week_list')
+            return redirect("week:week_list")
     else:
         form = WeekForm(instance=week)
-    return render(request, 'week/week_form.html', {'form': form})
+    return render(request, "week/week_form.html", {"form": form})
+
 
 @login_required
 def week_view(request, pk):
     week = get_object_or_404(Week, pk=pk)
     client = week.client
     employees = Employee.objects.filter(work_location=client)
-    employee_works = {work.employee_id: work for work in EmployeeWeekWork.objects.filter(week=week, employee__in=employees)}
-    return render(request, 'week/week_detail.html', {'week': week, 'employees': employees, 'employee_works': employee_works})
+    employee_works = {
+        work.employee_id: work
+        for work in EmployeeWeekWork.objects.filter(week=week, employee__in=employees)
+    }
+    return render(
+        request,
+        "week/week_detail.html",
+        {"week": week, "employees": employees, "employee_works": employee_works},
+    )
+
 
 @login_required
 def week_delete(request, pk):
     week = get_object_or_404(Week, pk=pk)
     week.delete()
-    return redirect('week:week_list')
+    return redirect("week:week_list")
+
 
 @login_required
 def week_work_edit(request, week_pk, employee_pk):
@@ -80,8 +99,10 @@ def week_work_edit(request, week_pk, employee_pk):
     form = EmployeeWeekWorkForm(request.POST or None, instance=work)
     if form.is_valid():
         form.save()
-        return redirect('week:week_view', pk=week.pk)
+        return redirect("week:week_view", pk=week.pk)
 
-
-    return render(request, 'week/week_work_form.html', {'form': form, 'employee':employee, 'week':week})
-
+    return render(
+        request,
+        "week/week_work_form.html",
+        {"form": form, "employee": employee, "week": week},
+    )

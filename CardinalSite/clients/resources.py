@@ -5,5 +5,4 @@ from .models import Client
 class ClientResource(resources.ModelResource):
     class Meta:
         model = Client
-        fields = ('name', 'phonenumber', 'location', 'email', 'date_joined')
-
+        fields = ("name", "phonenumber", "location", "email", "date_joined")

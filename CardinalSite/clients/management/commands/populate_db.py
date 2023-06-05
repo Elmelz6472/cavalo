@@ -7,15 +7,20 @@ from employees.models import Employee
 from clients.models import Client
 from week.models import Week, EmployeeWeekWork
 
+
 class Command(BaseCommand):
-    help = 'Creates random employees, clients, and week data'
+    help = "Creates random employees, clients, and week data"
 
     def add_arguments(self, parser):
-        parser.add_argument('total', type=int, help='Indicates the number of each object type to be created')
+        parser.add_argument(
+            "total",
+            type=int,
+            help="Indicates the number of each object type to be created",
+        )
 
     def handle(self, *args, **kwargs):
         fake = Faker()
-        total = kwargs['total']
+        total = kwargs["total"]
 
         for _ in range(total):
             Client.objects.create(
@@ -23,7 +28,7 @@ class Command(BaseCommand):
                 location=fake.address(),
                 email=fake.email(),
                 phonenumber=fake.phone_number(),
-                hourly_rate=Decimal("%.2f" % random.uniform(20, 40))
+                hourly_rate=Decimal("%.2f" % random.uniform(20, 40)),
             )
 
         clients = list(Client.objects.all())
@@ -43,7 +48,9 @@ class Command(BaseCommand):
 
         for client in clients:
             for _ in range(total):
-                start_date = fake.date_between(start_date=date(2023, 1, 1), end_date=date(2023, 12, 31))
+                start_date = fake.date_between(
+                    start_date=date(2023, 1, 1), end_date=date(2023, 12, 31)
+                )
                 end_date = start_date + timedelta(days=6)
                 week = Week.objects.create(
                     client=client,
