@@ -14,18 +14,19 @@ CardinalSite is a Django-based web application that allows managing clients, emp
   - [Dependencies](#dependencies)
   - [Contributing](#contributing)
   - [License](#license)
+  - [Support](#support)
 
 ## Project Description
 
-CardinalSite is a web application developed using Django framework to provide a comprehensive solution for managing clients, employees, and weekly data in a company. It allows users to track client information, employee details, and weekly reports efficiently.
+CardinalSite is a web application developed using the Django framework to provide a comprehensive solution for managing clients, employees, and weekly data in a company. It allows users to track client information, employee details, and weekly reports efficiently. The application offers a user-friendly interface and essential features to streamline business operations.
 
 ## Features
 
-- **Client Management**: Easily add, update, and delete client information, including name, contact details, and address.
-- **Employee Management**: Manage employee records, including their names, roles, and contact information.
-- **Week Management**: Keep track of weekly data, such as start and end dates, hours worked, and tasks completed.
-- **User Authentication**: Secure user authentication system to protect sensitive data and ensure authorized access.
-- **Data Visualization**: Visualize data using charts and graphs for better insights into the company's performance.
+- **Client Management**: Easily add, update, and delete client information, including name, contact details, and address. Keep track of client interactions and manage client relationships effectively.
+- **Employee Management**: Manage employee records, including their names, roles, contact information, and assignment to specific projects or tasks. Keep employee data organized and easily accessible.
+- **Week Management**: Keep track of weekly data, such as start and end dates, hours worked, tasks completed, and project progress. Generate reports to analyze productivity and project performance.
+- **User Authentication**: Secure user authentication system to protect sensitive data and ensure authorized access. Different user roles can be assigned, such as admin, manager, or employee, with varying levels of access.
+- **Data Visualization**: Visualize data using charts and graphs for better insights into the company's performance. Analyze key metrics, such as revenue, project progress, and employee productivity, through visual representations.
 
 ## Installation
 
@@ -54,7 +55,7 @@ The CardinalSite application will be accessible at `http://127.0.0.1:8000/`.
 
 ## Configuration
 
-The CardinalSite application can be configured by modifying the settings in the `settings.py` file. You can change database settings, secret key, static files configuration, and more according to your requirements.
+The CardinalSite application can be configured by modifying the settings in the `settings.py` file. You can change database settings, secret key, static files configuration, email settings, and more according to your requirements.
 
 ## Dependencies
 
@@ -73,3 +74,7 @@ Contributions are welcome! If you find any issues or have suggestions for improv
 ## License
 
 This project is licensed under a Commercial License. Contact the project owner for more information.
+
+## Support
+
+If you have any questions, suggestions, or need assistance, please reach out to our support team at [support@example.com](mailto:support@example.com). We are happy to help!
