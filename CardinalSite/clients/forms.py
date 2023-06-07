@@ -10,6 +10,10 @@ class ClientForm(forms.ModelForm):
             "contact_resource",
             "phonenumber",
             "email",
+            "date_joined",
             "location",
             "hourly_rate",
         ]
+        widgets = {
+            "date_joined": forms.DateInput(attrs={"type": "datetime-local"}),
+        }
