@@ -39,6 +39,7 @@
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Contact Resource</th>
                 <th>Location</th>
                 <th>Date Joined</th>
                 <th>Contact</th>
@@ -51,6 +52,7 @@
             {% for client in clients %}
                 <tr>
                     <td>{{ client.name }}</td>
+                    <td>{{ client.contact_resource }}</td>
                     <td>{{ client.location }}</td>
                     <td>{{ client.date_joined|date:"F j, Y" }}</td>
                     <td>

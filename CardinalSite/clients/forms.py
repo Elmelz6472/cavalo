@@ -7,8 +7,9 @@ class ClientForm(forms.ModelForm):
         model = Client
         fields = [
             "name",
+            "contact_resource",
             "phonenumber",
             "email",
             "location",
             "hourly_rate",
-        ]  # added field
+        ]

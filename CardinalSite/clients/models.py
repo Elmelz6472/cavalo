@@ -4,6 +4,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 class Client(models.Model):
     name = models.CharField(max_length=100)
+    contact_resource = models.CharField(max_length=100, null=True, blank=True)
     phonenumber = PhoneNumberField(blank=True)
     location = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
