@@ -9,9 +9,12 @@ class WeekForm(forms.ModelForm):
         model = Week
         fields = ["start_date", "client", "rate_field"]
         widgets = {
-            "start_date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
+            "start_date": forms.DateInput(
+                attrs={"type": "date", "class": "form-control"}
+            ),
             "client": forms.Select(attrs={"class": "form-control"}),
         }
+
 
 class EmployeeWeekWorkForm(forms.ModelForm):
     class Meta:

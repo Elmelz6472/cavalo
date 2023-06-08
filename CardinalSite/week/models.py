@@ -3,12 +3,11 @@ from clients.models import Client
 from employees.models import Employee
 
 
-
 class Week(models.Model):
     RATE_CHOICES = [
-        ('hourly_rate_morning', 'Morning Rate'),
-        ('hourly_rate_evening', 'Evening Rate'),
-        ('hourly_rate_night', 'Night Rate'),
+        ("hourly_rate_morning", "Morning Rate"),
+        ("hourly_rate_evening", "Evening Rate"),
+        ("hourly_rate_night", "Night Rate"),
     ]
 
     start_date = models.DateField()
@@ -18,7 +17,6 @@ class Week(models.Model):
 
     def __str__(self):
         return f"Week from {self.start_date} to {self.end_date}"
-
 
 
 class EmployeeWeekWork(models.Model):
