@@ -67,27 +67,21 @@
                 <td>{{ work.total_pay }}</td>
                 <td>{{ employee.hourly_salary }}</td>
                 <td>
-                     {% if week.rate_field == "hourly_rate_morning" %}
-                       {% comment %} {{ week.client.hourly_rate_morning }} * {{work.total_hours }} {% endcomment %}
-                       {% multiply_values week.client.hourly_rate_morning work.total_hours %}
-
-
+                {% if work.total_hours %}
+                    {% if week.rate_field == "hourly_rate_morning" %}
+                        {{ week.client.hourly_rate_morning|multiply_values:work.total_hours }}
                     {% elif week.rate_field == "hourly_rate_evening" %}
-                        {% comment %} {{ week.client.hourly_rate_evening }} * {{work.total_hours }} {% endcomment %}
-
-                       {% multiply_values week.client.hourly_rate_evening work.total_hours %}
-
-
+                        {{ week.client.hourly_rate_evening|multiply_values:work.total_hours }}
                     {% elif week.rate_field == "hourly_rate_night" %}
-                        {% comment %} {{ week.client.hourly_rate_night }} * {{work.total_hours }} {% endcomment %}
-                       {% multiply_values week.client.hourly_rate_night work.total_hours %}
-
+                        {{ week.client.hourly_rate_night|multiply_values:work.total_hours }}
                     {% else %}
                         Unknown
                     {% endif %}
-
-
+                {% else %}
+                    No total hours available
+                {% endif %}
                 </td>
+
                 <td>{{ work.bonus }}</td>
             {% endwith %}
             <td><a href="{% url 'week:week_work_edit' week.pk employee.pk %}" class="btn btn-warning btn-sm">Edit</a></td>

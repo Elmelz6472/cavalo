@@ -1,4 +1,6 @@
-from django.db.models import Sum, F
+from django.db.models import Case, F, Sum, When, ExpressionWrapper, DecimalField
+from django.db import models
+from django.db.models.functions import Coalesce
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Client
@@ -56,25 +58,53 @@ def client_view(request, pk):
 
     total_pay_global = sum(item["total_pay"] for item in grouped_work_data)
 
+
+
     invoice_data = (
         EmployeeWeekWork.objects.filter(week__in=weeks)
         .annotate(
-            total_hours=(
-                Sum(
-                    F("monday")
-                    + F("tuesday")
-                    + F("wednesday")
-                    + F("thursday")
-                    + F("friday")
-                    + F("saturday")
-                    + F("sunday")
-                )
+            total_hours=Sum(
+                F("monday")
+                + F("tuesday")
+                + F("wednesday")
+                + F("thursday")
+                + F("friday")
+                + F("saturday")
+                + F("sunday")
+            )
+        )
+        .annotate(
+            hourly_rate_morning=Case(
+                When(week__rate_field="hourly_rate_morning", then=F("total_hours") * F("week__client__hourly_rate_morning")),
+                default=0,
+                output_field=DecimalField(),
             ),
-            weekly_invoice=F("total_hours") * F("week__client__hourly_rate"),
+            hourly_rate_evening=Case(
+                When(week__rate_field="hourly_rate_evening", then=F("total_hours") * F("week__client__hourly_rate_evening")),
+                default=0,
+                output_field=DecimalField(),
+            ),
+            hourly_rate_night=Case(
+                When(week__rate_field="hourly_rate_night", then=F("total_hours") * F("week__client__hourly_rate_night")),
+                default=0,
+                output_field=DecimalField(),
+            ),
+        )
+        .annotate(
+            weekly_invoice=Coalesce("hourly_rate_morning", "hourly_rate_evening", "hourly_rate_night")
         )
         .values("week__start_date", "weekly_invoice")
         .order_by("week__start_date")
     )
+
+
+
+
+
+
+
+
+
 
     grouped_invoice_data = []
     total_invoice = 0
