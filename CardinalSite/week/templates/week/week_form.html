@@ -16,6 +16,13 @@
         {{ form.client }}
         {{ form.client.errors }}
     </div>
+    <div class="form-group">
+        <label for="{{ form.rate_field.id_for_label }}">Rate:</label><br>
+        {% for choice in form.rate_field %}
+            {{ choice.tag }} {{ choice.choice_label }}<br>
+        {% endfor %}
+        {{ form.rate_field.errors }}
+    </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 {% endblock %}

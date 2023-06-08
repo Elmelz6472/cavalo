@@ -8,6 +8,15 @@
             <div class="card-header text-center">
                 <h2>{{employee}}</h2>
                 <h2>{{ week.start_date }} to {{ week.end_date }}</h2>
+                <h2>{% if week.rate_field == "hourly_rate_morning" %}
+                        Morning: {{ week.client.hourly_rate_morning }}$/h
+                    {% elif week.rate_field == "hourly_rate_evening" %}
+                        Evening: {{ week.client.hourly_rate_evening }}$/h
+                    {% elif week.rate_field == "hourly_rate_night" %}
+                        Night: {{ week.client.hourly_rate_night }}$/h
+                    {% else %}
+                        Unknown
+                    {% endif %}</h2>
             </div>
             <div class="card-body">
                 <form method="POST">

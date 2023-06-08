@@ -8,6 +8,18 @@
     <div>
         <h1 class="mb-4">{{ week.start_date|date:"l F j" }} to {{ week.end_date|date:"l F j Y" }}</h1>
         <h2 class="text-muted"><a href="{% url 'clients:client_view' week.client.pk %}" >Client: {{ week.client.name }}</a></h2>
+
+        <h2>
+            {% if week.rate_field == "hourly_rate_morning" %}
+                        Morning: {{ week.client.hourly_rate_morning }}$/h
+                    {% elif week.rate_field == "hourly_rate_evening" %}/h
+                        Evening: {{ week.client.hourly_rate_evening }}$/h
+                    {% elif week.rate_field == "hourly_rate_night" %}
+                        Night: {{ week.client.hourly_rate_night }}$/h
+                    {% else %}
+                        Unknown
+                    {% endif %}
+        </h2>
     </div>
     <a href="{% url 'week:week_list' %}" class="btn btn-outline-primary mb-3">Back to List</a>
 
@@ -29,6 +41,8 @@
                 <th>Sunday</th>
                 <th>Total Hours</th>
                 <th>Total Pay</th>
+                <th>Salary (employee)</th>
+                <th>Invoice (client)</th>
                 <th>Bonus</th>
                 <th>Actions</th>
             </tr>
@@ -51,6 +65,29 @@
                 <td>{{ work.sunday }}</td>
                 <td>{{ work.total_hours }}</td>
                 <td>{{ work.total_pay }}</td>
+                <td>{{ employee.hourly_salary }}</td>
+                <td>
+                     {% if week.rate_field == "hourly_rate_morning" %}
+                       {% comment %} {{ week.client.hourly_rate_morning }} * {{work.total_hours }} {% endcomment %}
+                       {% multiply_values week.client.hourly_rate_morning work.total_hours %}
+
+
+                    {% elif week.rate_field == "hourly_rate_evening" %}
+                        {% comment %} {{ week.client.hourly_rate_evening }} * {{work.total_hours }} {% endcomment %}
+
+                       {% multiply_values week.client.hourly_rate_evening work.total_hours %}
+
+
+                    {% elif week.rate_field == "hourly_rate_night" %}
+                        {% comment %} {{ week.client.hourly_rate_night }} * {{work.total_hours }} {% endcomment %}
+                       {% multiply_values week.client.hourly_rate_night work.total_hours %}
+
+                    {% else %}
+                        Unknown
+                    {% endif %}
+
+
+                </td>
                 <td>{{ work.bonus }}</td>
             {% endwith %}
             <td><a href="{% url 'week:week_work_edit' week.pk employee.pk %}" class="btn btn-warning btn-sm">Edit</a></td>

@@ -3,16 +3,15 @@ from .models import Week, EmployeeWeekWork
 
 
 class WeekForm(forms.ModelForm):
+    rate_field = forms.ChoiceField(choices=Week.RATE_CHOICES, widget=forms.RadioSelect)
+
     class Meta:
         model = Week
-        fields = ["start_date", "client"]
+        fields = ["start_date", "client", "rate_field"]
         widgets = {
-            "start_date": forms.DateInput(
-                attrs={"type": "date", "class": "form-control"}
-            ),
+            "start_date": forms.DateInput(attrs={"type": "date", "class": "form-control"}),
             "client": forms.Select(attrs={"class": "form-control"}),
         }
-
 
 class EmployeeWeekWorkForm(forms.ModelForm):
     class Meta:

@@ -11,7 +11,6 @@ from operator import itemgetter
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 
-
 @login_required
 def client_export(request):
     client_resources = ClientResource()
