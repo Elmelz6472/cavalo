@@ -58,8 +58,6 @@ def client_view(request, pk):
 
     total_pay_global = sum(item["total_pay"] for item in grouped_work_data)
 
-
-
     invoice_data = (
         EmployeeWeekWork.objects.filter(week__in=weeks)
         .annotate(
@@ -75,36 +73,38 @@ def client_view(request, pk):
         )
         .annotate(
             hourly_rate_morning=Case(
-                When(week__rate_field="hourly_rate_morning", then=F("total_hours") * F("week__client__hourly_rate_morning")),
+                When(
+                    week__rate_field="hourly_rate_morning",
+                    then=F("total_hours") * F("week__client__hourly_rate_morning"),
+                ),
                 default=0,
                 output_field=DecimalField(),
             ),
             hourly_rate_evening=Case(
-                When(week__rate_field="hourly_rate_evening", then=F("total_hours") * F("week__client__hourly_rate_evening")),
+                When(
+                    week__rate_field="hourly_rate_evening",
+                    then=F("total_hours") * F("week__client__hourly_rate_evening"),
+                ),
                 default=0,
                 output_field=DecimalField(),
             ),
             hourly_rate_night=Case(
-                When(week__rate_field="hourly_rate_night", then=F("total_hours") * F("week__client__hourly_rate_night")),
+                When(
+                    week__rate_field="hourly_rate_night",
+                    then=F("total_hours") * F("week__client__hourly_rate_night"),
+                ),
                 default=0,
                 output_field=DecimalField(),
             ),
         )
         .annotate(
-            weekly_invoice=Coalesce("hourly_rate_morning", "hourly_rate_evening", "hourly_rate_night")
+            weekly_invoice=Coalesce(
+                "hourly_rate_morning", "hourly_rate_evening", "hourly_rate_night"
+            )
         )
         .values("week__start_date", "weekly_invoice")
         .order_by("week__start_date")
     )
-
-
-
-
-
-
-
-
-
 
     grouped_invoice_data = []
     total_invoice = 0

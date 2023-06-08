@@ -12,7 +12,7 @@
         <h2>
             {% if week.rate_field == "hourly_rate_morning" %}
                         Morning: {{ week.client.hourly_rate_morning }}$/h
-                    {% elif week.rate_field == "hourly_rate_evening" %}/h
+                    {% elif week.rate_field == "hourly_rate_evening" %}
                         Evening: {{ week.client.hourly_rate_evening }}$/h
                     {% elif week.rate_field == "hourly_rate_night" %}
                         Night: {{ week.client.hourly_rate_night }}$/h
