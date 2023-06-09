@@ -74,7 +74,7 @@ def client_view(request, pk):
         .annotate(
             hourly_rate_morning=Case(
                 When(
-                    week__rate_field='hourly_rate_morning',
+                    week__rate_field="hourly_rate_morning",
                     then=F("total_hours") * F("week__client__hourly_rate_morning"),
                 ),
                 default=0,
@@ -82,7 +82,7 @@ def client_view(request, pk):
             ),
             hourly_rate_evening=Case(
                 When(
-                    week__rate_field='hourly_rate_evening',
+                    week__rate_field="hourly_rate_evening",
                     then=F("total_hours") * F("week__client__hourly_rate_evening"),
                 ),
                 default=0,
@@ -90,7 +90,7 @@ def client_view(request, pk):
             ),
             hourly_rate_night=Case(
                 When(
-                    week__rate_field='hourly_rate_night',
+                    week__rate_field="hourly_rate_night",
                     then=F("total_hours") * F("week__client__hourly_rate_night"),
                 ),
                 default=0,
@@ -98,7 +98,9 @@ def client_view(request, pk):
             ),
         )
         .annotate(
-            weekly_invoice=F("hourly_rate_morning") + F("hourly_rate_evening") + F("hourly_rate_night")
+            weekly_invoice=F("hourly_rate_morning")
+            + F("hourly_rate_evening")
+            + F("hourly_rate_night")
         )
         .values("week__start_date", "weekly_invoice")
         .order_by("week__start_date")

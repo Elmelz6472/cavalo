@@ -28,7 +28,9 @@ class Command(BaseCommand):
                 location=fake.address(),
                 email=fake.email(),
                 phonenumber=fake.phone_number(),
-                hourly_rate=Decimal("%.2f" % random.uniform(20, 40)),
+                hourly_rate_morning=Decimal("%.2f" % random.uniform(20, 40)),
+                hourly_rate_evening=Decimal("%.2f" % random.uniform(30, 50)),
+                hourly_rate_night=Decimal("%.2f" % random.uniform(40, 60)),
             )
 
         clients = list(Client.objects.all())
@@ -56,6 +58,7 @@ class Command(BaseCommand):
                     client=client,
                     start_date=start_date,
                     end_date=end_date,
+                    rate_field=random.choice(['hourly_rate_morning', 'hourly_rate_evening', 'hourly_rate_night']),
                 )
                 client_employees = employees.filter(work_location=client)
                 for employee in client_employees:

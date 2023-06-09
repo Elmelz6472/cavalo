@@ -91,9 +91,9 @@ def finance_view(request):
                 ),
             )
             .annotate(
-                weekly_invoice=Coalesce(
-                    "hourly_rate_morning", "hourly_rate_evening", "hourly_rate_night"
-                )
+                weekly_invoice=F("hourly_rate_morning")
+                + F("hourly_rate_evening")
+                + F("hourly_rate_night")
             )
             .values("week__start_date", "weekly_invoice")
             .order_by("week__start_date")
@@ -104,20 +104,17 @@ def finance_view(request):
         for key, group in groupby(invoice_data, key=itemgetter("week__start_date")):
             weekly_invoice = sum(item["weekly_invoice"] for item in group)
             total_invoice += weekly_invoice
-            total_invoice_global += weekly_invoice
             grouped_invoice_data.append(
                 {"week__start_date": key, "weekly_invoice": weekly_invoice}
             )
 
+        print(f"total_invoice {total_invoice}")
         diff_data = []
         for work, invoice in zip(grouped_work_data, grouped_invoice_data):
             if work["week__start_date"] == invoice["week__start_date"]:
                 difference = invoice["weekly_invoice"] - work["total_pay"]
                 diff_data.append(
-                    {
-                        "week__start_date": work["week__start_date"],
-                        "difference": difference,
-                    }
+                    {"week__start_date": work["week__start_date"], "difference": difference}
                 )
 
         total_profit = sum(item["difference"] for item in diff_data)
