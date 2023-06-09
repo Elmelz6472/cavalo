@@ -1,0 +1,2 @@
+alias killserver='ps auxw | grep runserver'
+alias python=virtual_env/bin/python

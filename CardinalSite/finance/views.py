@@ -114,7 +114,10 @@ def finance_view(request):
             if work["week__start_date"] == invoice["week__start_date"]:
                 difference = invoice["weekly_invoice"] - work["total_pay"]
                 diff_data.append(
-                    {"week__start_date": work["week__start_date"], "difference": difference}
+                    {
+                        "week__start_date": work["week__start_date"],
+                        "difference": difference,
+                    }
                 )
 
         total_profit = sum(item["difference"] for item in diff_data)
