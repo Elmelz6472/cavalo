@@ -1,5 +1,7 @@
 {% extends 'employees/base.html' %}
 {% load custom_filters %}
+{% load custom_filters_employee %}
+
 
 {% block title %}Employee Detail{% endblock %}
 {% block content %}
@@ -12,6 +14,7 @@
     <div class="card border-primary mb-3 shadow">
         <div class="card-header {% if employee.is_driver %}bg-success{% else %}bg-primary{% endif %} text-white text-center">
             <h2 class="mb-0">{{ employee.first_name }} {{ employee.last_name }}</h2>
+
         </div>
         <div class="card-body">
             <div class="row mb-4">
@@ -63,6 +66,7 @@
                     <table class="table table-striped">
                       <tr>
                     <th>Week</th>
+                    <th>Shift</th>
                     <th>Monday</th>
                     <th>Tuesday</th>
                     <th>Wednesday</th>
@@ -72,8 +76,9 @@
                     <th>Sunday</th>
                     <th>Total Hours</th>
                     <th>Total Pay</th>
+                    <th>Salary (employee)</th>
+                    <th>Invoice (client)</th>
                     <th>Bonus</th>
-                    <th>Hourly Salary</th>
                 </tr>
             </thead>
             <tbody>
@@ -81,8 +86,18 @@
                 <tr>
                     <td>
                         <a href="{% url 'week:week_view' work.week.pk %}">
-                            {{ work.week.start_date|date:"F j, Y" }} - {{ work.week.end_date|date:"F j, Y" }}
+                             {{ work.week.start_date|date:"F j" }} - {{ work.week.end_date|date:"F j" }}
                         </a>
+                    </td>
+                    <td> {% if work.week.rate_field == "hourly_rate_morning" %}
+                               Morning
+                            {% elif work.week.rate_field == "hourly_rate_evening" %}
+                               Evening
+                            {% elif work.week.rate_field == "hourly_rate_night" %}
+                                Night
+                            {% else %}
+                                Unknown
+                            {% endif %}
                     </td>
                     <td>{{ work.monday }}</td>
                     <td>{{ work.tuesday }}</td>
@@ -93,8 +108,27 @@
                     <td>{{ work.sunday }}</td>
                     <td>{{ work.total_hours }}</td>
                     <td>{{ work.total_pay }}</td>
-                    <td>{{ work.bonus }}</td>
+
+
                     <td>{{ employee.hourly_salary }}</td>
+                    <td>
+                    {% if work.total_hours %}
+                        {% if work.week.rate_field == "hourly_rate_morning" %}
+                            {{ work.week.client.hourly_rate_morning|multiply_values:work.total_hours }}
+                        {% elif work.week.rate_field == "hourly_rate_evening" %}
+                            {{ work.week.client.hourly_rate_evening|multiply_values:work.total_hours }}
+                        {% elif work.week.rate_field == "hourly_rate_night" %}
+                            {{ work.week.client.hourly_rate_night|multiply_values:work.total_hours }}
+                        {% else %}
+                            Unknown
+                        {% endif %}
+                    {% else %}
+                        No total hours available
+                    {% endif %}
+                    </td>
+
+                    <td>{{ work.bonus }}</td>
+                    {% comment %} <td>{{ employee.hourly_salary }}</td> {% endcomment %}
 
                 </tr>
                 {% endfor %}

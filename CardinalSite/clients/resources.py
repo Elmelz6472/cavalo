@@ -12,4 +12,7 @@ class ClientResource(resources.ModelResource):
             "location",
             "email",
             "date_joined",
+            "hourly_rate_morning",
+            "hourly_rate_evening",
+            "hourly_rate_night",
         )

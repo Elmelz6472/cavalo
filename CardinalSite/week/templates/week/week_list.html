@@ -2,9 +2,6 @@
 {% block title %}Week List{% endblock %}
 {% block content %}
 
-
-
-
 <div class="container mt-5">
     <div class="card border-primary mb-3 shadow">
         <div class="card-header bg-primary text-white text-center">
@@ -23,69 +20,74 @@
                     </div>
                 </div>
                 <div class="col-md-6 text-md-right">
-                <a href="{% url 'week:week_create' %}" class="btn btn-primary">Add Week</a>
+                    <a href="{% url 'week:week_create' %}" class="btn btn-primary">Add Week</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
-
-
-
-
-    <table id="weekTable" class="table table-striped mt-3 mb-5">
-        <thead>
+<table id="weekTable" class="table table-striped mt-3 mb-5">
+    <thead>
+        <tr>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Client</th>
+            <th>Rate</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for week in weeks %}
             <tr>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Client</th>
-                <th>Actions</th>
+                <td>{{ week.start_date }}</td>
+                <td>{{ week.end_date }}</td>
+                <td>{{ week.client }}</td>
+                <td>
+                    {% if week.rate_field == "hourly_rate_morning" %}
+                        Morning: {{ week.client.hourly_rate_morning }}$
+                    {% elif week.rate_field == "hourly_rate_evening" %}
+                        Evening: {{ week.client.hourly_rate_evening }}$
+                    {% elif week.rate_field == "hourly_rate_night" %}
+                        Night: {{ week.client.hourly_rate_night }}$
+                    {% else %}
+                        Unknown
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="d-flex flex-wrap">
+                        <a href="{% url 'week:week_view' week.pk %}" class="btn btn-success btn-sm mr-2 mb-2">View</a>
+                        <a href="{% url 'week:week_edit' week.pk %}" class="btn btn-warning btn-sm mr-2 mb-2">Edit</a>
+                        <a href="#" onclick="confirmDelete({{ week.pk }})" class="btn btn-danger btn-sm mb-2">Delete</a>
+                    </div>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            {% for week in weeks %}
-                <tr>
-                    <td>{{ week.start_date }}</td>
-                    <td>{{ week.end_date }}</td>
-                    <td>{{ week.client }}</td>
-                    <td>
-                        <div class="d-flex flex-wrap">
-                            <a href="{% url 'week:week_view' week.pk %}" class="btn btn-success btn-sm mr-2 mb-2">View</a>
-                            <a href="{% url 'week:week_edit' week.pk %}" class="btn btn-warning btn-sm mr-2 mb-2">Edit</a>
-                            <a href="#" onclick="confirmDelete({{ week.pk }})" class="btn btn-danger btn-sm mb-2">Delete</a>
-                        </div>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
+
 {% block extra_js %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 
-
 <script>
-
-            $(document).ready(function() {
-        $('#weekTable').DataTable({
-            "language": {
-                "emptyTable": "No clients found"
-            },
-            "pagingType": "full_numbers",
-            "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
-            "order": []
-        });
+$(document).ready(function() {
+    $('#weekTable').DataTable({
+        "language": {
+            "emptyTable": "No clients found"
+        },
+        "pagingType": "full_numbers",
+        "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]],
+        "order": []
     });
+});
 
-
-  function confirmDelete(weekId) {
+function confirmDelete(weekId) {
     if (confirm("Are you sure you want to delete this week?")) {
-      window.location.href = "{% url 'week:week_delete' 0 %}".replace('0', weekId);
+        window.location.href = "{% url 'week:week_delete' 0 %}".replace('0', weekId);
     }
-  }
+}
 </script>
 {% endblock %}

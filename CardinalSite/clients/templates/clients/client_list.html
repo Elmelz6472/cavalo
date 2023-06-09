@@ -44,7 +44,10 @@
                 <th>Date Joined</th>
                 <th>Contact</th>
                 <th>Number of Employees</th>
-                <th>Hourly Rate</th>
+                <th>Hourly Rate Morning</th>
+                <th>Hourly Rate Evening</th>
+                <th>Hourly Rate Night</th>
+
                 <th>Actions</th>
             </tr>
         </thead>
@@ -63,7 +66,13 @@
                         <td>{{ client_employee_count|get_item:client_pk }}</td>
                     {% endwith %}
                     <td>
-                       {{ client.hourly_rate }}$
+                       {{ client.hourly_rate_morning }}$
+                    </td>
+                    <td>
+                       {{ client.hourly_rate_evening }}$
+                    </td>
+                    <td>
+                       {{ client.hourly_rate_night }}$
                     </td>
                     <td>
 

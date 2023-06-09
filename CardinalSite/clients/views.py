@@ -1,4 +1,6 @@
-from django.db.models import Sum, F
+from django.db.models import Case, F, Sum, When, ExpressionWrapper, DecimalField
+from django.db import models
+from django.db.models.functions import Coalesce
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Client
@@ -59,18 +61,46 @@ def client_view(request, pk):
     invoice_data = (
         EmployeeWeekWork.objects.filter(week__in=weeks)
         .annotate(
-            total_hours=(
-                Sum(
-                    F("monday")
-                    + F("tuesday")
-                    + F("wednesday")
-                    + F("thursday")
-                    + F("friday")
-                    + F("saturday")
-                    + F("sunday")
-                )
+            total_hours=Sum(
+                F("monday")
+                + F("tuesday")
+                + F("wednesday")
+                + F("thursday")
+                + F("friday")
+                + F("saturday")
+                + F("sunday")
+            )
+        )
+        .annotate(
+            hourly_rate_morning=Case(
+                When(
+                    week__rate_field="hourly_rate_morning",
+                    then=F("total_hours") * F("week__client__hourly_rate_morning"),
+                ),
+                default=0,
+                output_field=DecimalField(),
             ),
-            weekly_invoice=F("total_hours") * F("week__client__hourly_rate"),
+            hourly_rate_evening=Case(
+                When(
+                    week__rate_field="hourly_rate_evening",
+                    then=F("total_hours") * F("week__client__hourly_rate_evening"),
+                ),
+                default=0,
+                output_field=DecimalField(),
+            ),
+            hourly_rate_night=Case(
+                When(
+                    week__rate_field="hourly_rate_night",
+                    then=F("total_hours") * F("week__client__hourly_rate_night"),
+                ),
+                default=0,
+                output_field=DecimalField(),
+            ),
+        )
+        .annotate(
+            weekly_invoice=F("hourly_rate_morning")
+            + F("hourly_rate_evening")
+            + F("hourly_rate_night")
         )
         .values("week__start_date", "weekly_invoice")
         .order_by("week__start_date")
@@ -85,6 +115,7 @@ def client_view(request, pk):
             {"week__start_date": key, "weekly_invoice": weekly_invoice}
         )
 
+    print(f"total_invoice {total_invoice}")
     diff_data = []
     for work, invoice in zip(grouped_work_data, grouped_invoice_data):
         if work["week__start_date"] == invoice["week__start_date"]:
