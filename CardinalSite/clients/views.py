@@ -45,6 +45,7 @@ def client_view(request, pk):
                     + F("sunday")
                 )
                 * F("employee__hourly_salary")
+                + F("bonus")
             )
         )
         .values("week__start_date", "total_pay")

@@ -38,6 +38,7 @@ def finance_view(request):
                         + F("sunday")
                     )
                     * F("employee__hourly_salary")
+                    + F("bonus")
                 )
             )
             .values("week__start_date", "total_pay")
@@ -108,13 +109,16 @@ def finance_view(request):
                 {"week__start_date": key, "weekly_invoice": weekly_invoice}
             )
 
-        print(f"total_invoice {total_invoice}")
+        # print(f"total_invoice {total_invoice}")
         diff_data = []
         for work, invoice in zip(grouped_work_data, grouped_invoice_data):
             if work["week__start_date"] == invoice["week__start_date"]:
                 difference = invoice["weekly_invoice"] - work["total_pay"]
                 diff_data.append(
-                    {"week__start_date": work["week__start_date"], "difference": difference}
+                    {
+                        "week__start_date": work["week__start_date"],
+                        "difference": difference,
+                    }
                 )
 
         total_profit = sum(item["difference"] for item in diff_data)
@@ -143,7 +147,9 @@ def finance_view(request):
 
     try:
         average_invoice_per_compagnie = total_invoice_global / clients_count
+        # print(f"clients_count {clients_count}")
     except ZeroDivisionError:
+        print("ZeroDivisionError")
         average_invoice_per_compagnie = 0
 
     return render(
