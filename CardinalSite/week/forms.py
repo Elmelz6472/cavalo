@@ -3,7 +3,7 @@ from .models import Week, EmployeeWeekWork
 
 
 class WeekForm(forms.ModelForm):
-    rate_field = forms.ChoiceField(choices=Week.RATE_CHOICES, widget=forms.RadioSelect)
+    rate_field = forms.ChoiceField(choices=Week.RATE_CHOICES, widget=forms.RadioSelect, required=True)
 
     class Meta:
         model = Week
@@ -13,6 +13,7 @@ class WeekForm(forms.ModelForm):
                 attrs={"type": "date", "class": "form-control"}
             ),
             "client": forms.Select(attrs={"class": "form-control"}),
+            "rate_field": forms.RadioSelect(attrs={"required": "required"})
         }
 
 

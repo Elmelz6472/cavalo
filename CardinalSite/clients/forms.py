@@ -1,8 +1,11 @@
 from django import forms
 from .models import Client
 
-
 class ClientForm(forms.ModelForm):
+    date_joined = forms.DateField(
+        widget=forms.DateInput(attrs={"type": "date"}), input_formats=("%Y-%m-%d",)
+    )
+
     class Meta:
         model = Client
         fields = [
@@ -16,6 +19,3 @@ class ClientForm(forms.ModelForm):
             "hourly_rate_evening",
             "hourly_rate_night",
         ]
-        widgets = {
-            "date_joined": forms.DateInput(attrs={"type": "datetime-local"}),
-        }

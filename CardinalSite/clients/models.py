@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils import timezone
+from datetime import date
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -9,7 +9,9 @@ class Client(models.Model):
     phonenumber = PhoneNumberField(blank=True)
     location = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(max_length=255, null=True, blank=True)
-    date_joined = models.DateField(default=timezone.now, null=True, blank=True)
+    date_joined = models.DateField(
+        default=date.today, blank=True, null=True
+    )
     hourly_rate_morning = models.DecimalField(
         max_digits=10, decimal_places=2, default=0.00
     )
